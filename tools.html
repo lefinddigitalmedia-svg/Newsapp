@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Tools - Tools Wonder</title>
+    <title>All Tools - Clickdera</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #1a56db;
-            --primary-dark: #1e40af;
-            --primary-light: #3b82f6;
-            --secondary: #f3f4f6;
-            --text: #1f2937;
-            --text-light: #6b7280;
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --primary-light: #4cc9f0;
+            --secondary: #f8f9fa;
+            --text: #212529;
+            --text-light: #6c757d;
             --white: #ffffff;
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
@@ -22,13 +23,14 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
             color: var(--text);
             background-color: var(--white);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         a {
@@ -43,7 +45,7 @@
             padding: 1rem 2rem;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
         }
 
         .header-container {
@@ -58,6 +60,12 @@
             font-size: 1.8rem;
             font-weight: 700;
             color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
         }
 
         .nav-desktop {
@@ -68,10 +76,27 @@
         .nav-desktop a {
             font-weight: 500;
             transition: var(--transition);
+            padding: 0.5rem 0;
+            position: relative;
         }
 
-        .nav-desktop a:hover {
+        .nav-desktop a:hover, .nav-desktop a.active {
             color: var(--primary);
+        }
+
+        .nav-desktop a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-desktop a:hover::after, .nav-desktop a.active::after {
+            width: 100%;
         }
 
         .contact-email {
@@ -83,73 +108,206 @@
             display: none;
             font-size: 1.5rem;
             cursor: pointer;
+            color: var(--primary);
         }
 
-        /* Page Header */
-        .page-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: var(--white);
-            padding: 3rem 2rem;
-            text-align: center;
-        }
-
-        .page-title {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Search and Filter Section */
-        .search-filter {
+        /* Mobile Navigation */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background: var(--white);
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: right 0.3s ease;
             padding: 2rem;
-            background-color: var(--secondary);
+            display: flex;
+            flex-direction: column;
         }
 
-        .search-container {
-            max-width: 800px;
-            margin: 0 auto 1.5rem;
-            position: relative;
+        .mobile-nav.active {
+            right: 0;
         }
 
-        .search-bar {
+        .mobile-nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .mobile-nav-links a {
+            font-weight: 500;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .mobile-nav-links a.active {
+            color: var(--primary);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 1rem 1.5rem;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Hero Section Styles */
+        .hero {
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.9) 0%, rgba(58, 12, 163, 0.9) 100%);
+            color: white;
+            padding: 100px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 5%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 5%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 7%),
+                radial-gradient(circle at 60% 60%, rgba(255, 255, 255, 0.05) 0%, transparent 7%);
+            background-size: 800px 800px;
+            animation: rotate 30s linear infinite;
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            line-height: 1.2;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.9);
+            animation: fadeInUp 1s ease 0.2s;
+            animation-fill-mode: both;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        
+        .hero-search {
+            max-width: 600px;
+            margin: 0 auto 40px;
+            position: relative;
+            animation: fadeInUp 1s ease 0.4s;
+            animation-fill-mode: both;
+        }
+        
+        .hero-search input {
+            width: 100%;
+            padding: 16px 60px 16px 20px;
             border: none;
             border-radius: 50px;
             font-size: 1.1rem;
-            box-shadow: var(--shadow);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
         }
-
-        .search-bar:focus {
+        
+        .hero-search input:focus {
             outline: 2px solid var(--primary-light);
         }
-
-        .filter-container {
+        
+        .hero-search button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .hero-search button:hover {
+            background: var(--primary-dark);
+        }
+        
+        .hero-tools-grid {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 0.8rem;
-            max-width: 800px;
-            margin: 0 auto;
+            gap: 15px;
+            margin-top: 30px;
+            animation: fadeIn 1s ease 0.6s;
+            animation-fill-mode: both;
         }
-
-        .filter-chip {
-            background-color: var(--white);
-            padding: 0.6rem 1.2rem;
-            border-radius: 50px;
-            font-weight: 500;
+        
+        .tool-badge {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             cursor: pointer;
-            transition: var(--transition);
-            box-shadow: var(--shadow);
         }
-
-        .filter-chip.active {
-            background-color: var(--primary);
-            color: var(--white);
+        
+        .tool-badge.active, .tool-badge:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
-
-        .filter-chip:hover:not(.active) {
-            background-color: var(--primary-light);
-            color: var(--white);
+        
+        .tool-badge i {
+            font-size: 20px;
+            color: white;
+        }
+        
+        .tool-badge span {
+            color: white;
+            font-weight: 500;
+            font-size: 0.9rem;
         }
 
         /* Tools Grid */
@@ -161,7 +319,7 @@
 
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1.5rem;
         }
 
@@ -175,6 +333,14 @@
             flex-direction: column;
             height: 100%;
             cursor: pointer;
+            border-top: 4px solid var(--primary);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .tool-card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .tool-card:hover {
@@ -186,18 +352,27 @@
             font-size: 2rem;
             color: var(--primary);
             margin-bottom: 1rem;
+            background: rgba(67, 97, 238, 0.1);
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .tool-name {
             font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
+            color: var(--text);
         }
 
         .tool-desc {
             color: var(--text-light);
             margin-bottom: 1.5rem;
             flex-grow: 1;
+            font-size: 0.9rem;
         }
 
         .tool-category {
@@ -207,93 +382,137 @@
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
             font-size: 0.8rem;
-            font-weight: 500;
+            font-weight: 50;
         }
 
-        /* Footer */
-        footer {
-            background-color: var(--primary-dark);
-            color: var(--white);
-            padding: 3rem 2rem;
+        /* Footer Styles */
+        .footer {
+            background: linear-gradient(135deg, #212529 0%, #2c3e50 100%);
+            color: white;
+            padding: 60px 0 20px;
         }
 
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .footer-content {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
-        .footer-logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
+        .footer-column {
+            display: flex;
+            flex-direction: column;
         }
 
-        .footer-tagline {
-            opacity: 0.8;
-            margin-bottom: 1.5rem;
+        .footer-column h3 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            position: relative;
+            padding-bottom: 10px;
         }
 
-        .footer-contact {
-            margin-bottom: 1.5rem;
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: #4361ee;
+            border-radius: 2px;
         }
 
         .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
             display: flex;
-            gap: 1.5rem;
+            flex-direction: column;
+            gap: 12px;
         }
 
         .footer-links a {
-            opacity: 0.8;
-            transition: var(--transition);
+            text-decoration: none;
+            color: #b0c4de;
+            transition: all 0.3s ease;
+            display: inline-block;
         }
 
         .footer-links a:hover {
-            opacity: 1;
+            color: #4361ee;
+            transform: translateX(5px);
         }
 
-        .copyright {
-            margin-top: 3rem;
+        .footer-about {
+            color: #b0c4de;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 25px;
             text-align: center;
-            opacity: 0.7;
+            max-width: 1200px;
+            margin: 40px auto 0;
+        }
+
+        .footer-bottom p {
+            color: #b0c4de;
+            margin-bottom: 0;
             font-size: 0.9rem;
         }
 
-        /* Bottom Navigation */
-        .bottom-nav {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: var(--white);
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 100;
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
-
-        .bottom-nav-items {
-            display: flex;
-            justify-content: space-around;
-            padding: 0.8rem 0;
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-
-        .bottom-nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 0.8rem;
-        }
-
-        .bottom-nav-icon {
-            font-size: 1.2rem;
-            margin-bottom: 0.3rem;
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         /* Responsive Design */
+        @media (max-width: 1200px) {
+            .header-container, .tools-container, .footer-content, .footer-bottom {
+                max-width: 960px;
+            }
+        }
+
         @media (max-width: 992px) {
             .tools-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .tool-badge {
+                padding: 10px 15px;
+            }
+            
+            .footer-content {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
@@ -311,16 +530,47 @@
                 grid-template-columns: 1fr;
             }
 
-            .page-title {
+            .hero {
+                padding: 80px 0 60px;
+            }
+            
+            .hero h1 {
                 font-size: 2rem;
             }
-
-            .bottom-nav {
-                display: block;
+            
+            .hero p {
+                font-size: 1rem;
             }
+            
+            .tool-badge {
+                width: calc(50% - 10px);
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .footer-column h3::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
 
-            .tools-container {
-                padding-bottom: 5rem;
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero-tools-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tool-badge {
+                width: 100%;
+                max-width: 250px;
+                justify-content: center;
             }
         }
     </style>
@@ -329,62 +579,109 @@
     <!-- Header -->
     <header>
         <div class="header-container">
-            <a href="index.html" class="logo">Tools Wonder</a>
+            <a href="index.html" class="logo"><i class="fas fa-tools"></i>Clickdera</a>
             <nav class="nav-desktop">
                 <a href="index.html">Home</a>
                 <a href="tools.html" class="active">Tools</a>
-                <a href="#contact">Contact</a>
+                <a href="about.html">About Us</a>
+                <a href="blog.html">Blog</a>
+                <a href="contact.html">Contact</a>
             </nav>
-            <div class="contact-email">toolswonder1@gmail.com</div>
+            <div class="contact-email">contact@clickdera.in</div>
             <div class="hamburger"><i class="fas fa-bars"></i></div>
         </div>
     </header>
 
-    <!-- Page Header -->
-    <section class="page-header">
-        <h1 class="page-title">All Tools</h1>
-    </section>
-
-    <!-- Search and Filter Section -->
-    <section class="search-filter">
-        <div class="search-container">
-            <input type="text" class="search-bar" placeholder="Search a tool..." id="toolSearch">
+    <!-- Mobile Navigation -->
+    <div class="overlay"></div>
+    <div class="mobile-nav">
+        <div class="mobile-nav-header">
+            <a href="index.html" class="logo"><i class="fas fa-tools"></i>Clickdera</a>
+            <div class="close-menu"><i class="fas fa-times"></i></div>
         </div>
-        <div class="filter-container">
-            <div class="filter-chip active" data-filter="all">All</div>
-            <div class="filter-chip" data-filter="pdf">PDF Tools</div>
-            <div class="filter-chip" data-filter="image">Image Tools</div>
-            <div class="filter-chip" data-filter="video">Video Tools</div>
-            <div class="filter-chip" data-filter="sign">Sign Tools</div>
+        <nav class="mobile-nav-links">
+            <a href="index.html">Home</a>
+            <a href="tools.html" class="active">Tools</a>
+            <a href="about.html">About Us</a>
+            <a href="blog.html">Blog</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>70+ Powerful Tools at Your Fingertips</h1>
+            <p>Convert, edit, and manage your files with our collection of free online tools. No installation required.</p>
+            
+            <div class="hero-search">
+                <input type="text" placeholder="Search for a tool..." id="heroSearch">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+            
+            <div class="hero-tools-grid">
+                <div class="tool-badge active" data-category="all">
+                    <i class="fas fa-th"></i>
+                    <span>All Tools</span>
+                </div>
+                <div class="tool-badge" data-category="pdf">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>PDF Tools</span>
+                </div>
+                <div class="tool-badge" data-category="image">
+                    <i class="fas fa-image"></i>
+                    <span>Image Tools</span>
+                </div>
+                <div class="tool-badge" data-category="video">
+                    <i class="fas fa-video"></i>
+                    <span>Video Tools</span>
+                </div>
+                <div class="tool-badge" data-category="sign">
+                    <i class="fas fa-file-signature"></i>
+                    <span>Sign Tools</span>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Tools Grid -->
-    <section class="tools-container">
+    <section class="tools-container" id="tools-section">
         <div class="tools-grid" id="toolsGrid">
-            <!-- PDF Tools -->
+            <!-- PDF Tools (20) -->
             <div class="tool-card" data-category="pdf" data-tool-name="PDF to Word">
-                <div class="tool-icon"><i class="fas fa-file-pdf"></i></div>
+                <div class="tool-icon"><i class="fas fa-file-word"></i></div>
                 <h3 class="tool-name">PDF to Word</h3>
                 <p class="tool-desc">Convert PDF files to editable Word documents</p>
                 <span class="tool-category">PDF Tools</span>
             </div>
             <div class="tool-card" data-category="pdf" data-tool-name="Word to PDF">
-                <div class="tool-icon"><i class="fas fa-file-word"></i></div>
+                <div class="tool-icon"><i class="fas fa-file-pdf"></i></div>
                 <h3 class="tool-name">Word to PDF</h3>
                 <p class="tool-desc">Convert Word documents to PDF format</p>
                 <span class="tool-category">PDF Tools</span>
             </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PDF Compress">
-                <div class="tool-icon"><i class="fas fa-compress-arrows-alt"></i></div>
-                <h3 class="tool-name">PDF Compress</h3>
-                <p class="tool-desc">Reduce PDF file size without losing quality</p>
+            <div class="tool-card" data-category="pdf" data-tool-name="PDF to Excel">
+                <div class="tool-icon"><i class="fas fa-file-excel"></i></div>
+                <h3 class="tool-name">PDF to Excel</h3>
+                <p class="tool-desc">Convert PDF files to Excel spreadsheets</p>
                 <span class="tool-category">PDF Tools</span>
             </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PDF Merge">
-                <div class="tool-icon"><i class="fas fa-object-group"></i></div>
-                <h3 class="tool-name">PDF Merge</h3>
-                <p class="tool-desc">Combine multiple PDF files into one</p>
+            <div class="tool-card" data-category="pdf" data-tool-name="Excel to PDF">
+                <div class="tool-icon"><i class="fas fa-file-pdf"></i></div>
+                <h3 class="tool-name">Excel to PDF</h3>
+                <p class="tool-desc">Convert Excel spreadsheets to PDF format</p>
+                <span class="tool-category">PDF Tools</span>
+            </div>
+            <div class="tool-card" data-category="pdf" data-tool-name="PDF to PPT">
+                <div class="tool-icon"><i class="fas fa-file-powerpoint"></i></div>
+                <h3 class="tool-name">PDF to PPT</h3>
+                <p class="tool-desc">Convert PDF files to PowerPoint presentations</p>
+                <span class="tool-category">PDF Tools</span>
+            </div>
+            <div class="tool-card" data-category="pdf" data-tool-name="PPT to PDF">
+                <div class="tool-icon"><i class="fas fa-file-pdf"></i></div>
+                <h3 class="tool-name">PPT to PDF</h3>
+                <p class="tool-desc">Convert PowerPoint presentations to PDF format</p>
                 <span class="tool-category">PDF Tools</span>
             </div>
             <div class="tool-card" data-category="pdf" data-tool-name="PDF Split">
@@ -393,14 +690,86 @@
                 <p class="tool-desc">Split PDF into multiple files</p>
                 <span class="tool-category">PDF Tools</span>
             </div>
+            <div class="tool-card" data-category="pdf" data-tool-name="PDF Merge">
+                <div class="tool-icon"><i class="fas fa-object-group"></i></div>
+                <h3 class="tool-name">PDF Merge</h3>
+                <p class="tool-desc">Combine multiple PDF files into one</p>
+                <span class="tool-category">PDF Tools</span>
+            </div>
+            <div class="tool-card" data-category="pdf" data-tool-name="PDF Compress">
+                <div class="tool-icon"><i class="fas fa-compress-arrows-alt"></i></div>
+                <h3 class="tool-name">PDF Compress</h3>
+                <p class="tool-desc">Reduce PDF file size without losing quality</p>
+                <span class="tool-category">PDF Tools</span>
+            </div>
+            <div class="tool-card" data-category="pdf" data-tool-name="PDF Unlock">
+                <div class="tool-icon"><i class="fas fa-unlock"></i></div>
+                <h3 class="tool-name">PDF Unlock</h3>
+                <p class="tool-desc">Remove password protection from PDF files</p>
+                <span class="tool-category">PDF Tools</span>
+            </div>
             <div class="tool-card" data-category="pdf" data-tool-name="PDF Protect">
                 <div class="tool-icon"><i class="fas fa-lock"></i></div>
                 <h3 class="tool-name">PDF Protect</h3>
                 <p class="tool-desc">Add password protection to your PDF files</p>
                 <span class="tool-category">PDF Tools</span>
             </div>
+            <div class="tool-card" data-category="pdf" data-tool-name="PDF Remove Password">
+                <div class="tool-icon"><i class="fas fa-key"></i></div>
+                <h3 class="tool-name">PDF Remove Password</h3>
+                <p class="tool-desc">Remove password from protected PDF files</p>
+                <span class="tool-category">PDF Tools</span>
+            </div>
+            <div class="tool-card" data-category="pdf" data-tool-name="PDF Rotate">
+                <div class="tool-icon"><i class="fas fa-redo"></i></div>
+                <h3 class="tool-name">PDF Rotate</h3>
+                <p class="tool-desc">Rotate pages in PDF documents</p>
+                <span class="tool-category">PDF Tools</span>
+            </div>
+            <div class="tool-card" data-category="pdf" data-tool-name="PDF to JPG">
+                <div class="tool-icon"><i class="fas fa-file-image"></i></div>
+                <h3 class="tool-name">PDF to JPG</h3>
+                <p class="tool-desc">Convert PDF pages to JPG images</p>
+                <span class="tool-category">PDF Tools</span>
+            </div>
+            <div class="tool-card" data-category="pdf" data-tool-name="JPG to PDF">
+                <div class="tool-icon"><i class="fas fa-file-pdf"></i></div>
+                <h3 class="tool-name">JPG to PDF</h3>
+                <p class="tool-desc">Convert JPG images to PDF documents</p>
+                <span class="tool-category">PDF Tools</span>
+            </div>
+            <div class="tool-card" data-category="pdf" data-tool-name="PDF to PNG">
+                <div class="tool-icon"><i class="fas fa-file-image"></i></div>
+                <h3 class="tool-name">PDF to PNG</h3>
+                <p class="tool-desc">Convert PDF pages to PNG images</p>
+                <span class="tool-category">PDF Tools</span>
+            </div>
+            <div class="tool-card" data-category="pdf" data-tool-name="PNG to PDF">
+                <div class="tool-icon"><i class="fas fa-file-pdf"></i></div>
+                <h3 class="tool-name">PNG to PDF</h3>
+                <p class="tool-desc">Convert PNG images to PDF documents</p>
+                <span class="tool-category">PDF Tools</span>
+            </div>
+            <div class="tool-card" data-category="pdf" data-tool-name="PDF to TXT">
+                <div class="tool-icon"><i class="fas fa-file-alt"></i></div>
+                <h3 class="tool-name">PDF to TXT</h3>
+                <p class="tool-desc">Extract text from PDF files</p>
+                <span class="tool-category">PDF Tools</span>
+            </div>
+            <div class="tool-card" data-category="pdf" data-tool-name="PDF to HTML">
+                <div class="tool-icon"><i class="fas fa-code"></i></div>
+                <h3 class="tool-name">PDF to HTML</h3>
+                <p class="tool-desc">Convert PDF files to HTML web pages</p>
+                <span class="tool-category">PDF Tools</span>
+            </div>
+            <div class="tool-card" data-category="pdf" data-tool-name="PDF Metadata Editor">
+                <div class="tool-icon"><i class="fas fa-info-circle"></i></div>
+                <h3 class="tool-name">PDF Metadata Editor</h3>
+                <p class="tool-desc">Edit metadata information in PDF files</p>
+                <span class="tool-category">PDF Tools</span>
+            </div>
 
-            <!-- Image Tools -->
+            <!-- Image Tools (20) -->
             <div class="tool-card" data-category="image" data-tool-name="Image Resize">
                 <div class="tool-icon"><i class="fas fa-expand-arrows-alt"></i></div>
                 <h3 class="tool-name">Image Resize</h3>
@@ -419,16 +788,40 @@
                 <p class="tool-desc">Convert JPG images to PNG format</p>
                 <span class="tool-category">Image Tools</span>
             </div>
+            <div class="tool-card" data-category="image" data-tool-name="PNG to JPG">
+                <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
+                <h3 class="tool-name">PNG to JPG</h3>
+                <p class="tool-desc">Convert PNG images to JPG format</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
+            <div class="tool-card" data-category="image" data-tool-name="Image to WebP">
+                <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
+                <h3 class="tool-name">Image to WebP</h3>
+                <p class="tool-desc">Convert images to WebP format</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
+            <div class="tool-card" data-category="image" data-tool-name="WebP to Image">
+                <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
+                <h3 class="tool-name">WebP to Image</h3>
+                <p class="tool-desc">Convert WebP images to other formats</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
             <div class="tool-card" data-category="image" data-tool-name="Remove Background">
                 <div class="tool-icon"><i class="fas fa-layer-group"></i></div>
                 <h3 class="tool-name">Remove Background</h3>
                 <p class="tool-desc">Remove background from images automatically</p>
                 <span class="tool-category">Image Tools</span>
             </div>
-            <div class="tool-card" data-category="image" data-tool-name="Compress Image">
-                <div class="tool-icon"><i class="fas fa-compress-alt"></i></div>
-                <h3 class="tool-name">Compress Image</h3>
-                <p class="tool-desc">Reduce image file size without losing quality</p>
+            <div class="tool-card" data-category="image" data-tool-name="Blur Image">
+                <div class="tool-icon"><i class="fas fa-tint"></i></div>
+                <h3 class="tool-name">Blur Image</h3>
+                <p class="tool-desc">Apply blur effects to your images</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
+            <div class="tool-card" data-category="image" data-tool-name="Sharpen Image">
+                <div class="tool-icon"><i class="fas fa-magic"></i></div>
+                <h3 class="tool-name">Sharpen Image</h3>
+                <p class="tool-desc">Enhance image sharpness and clarity</p>
                 <span class="tool-category">Image Tools</span>
             </div>
             <div class="tool-card" data-category="image" data-tool-name="Add Watermark">
@@ -437,12 +830,78 @@
                 <p class="tool-desc">Add text or image watermarks to your photos</p>
                 <span class="tool-category">Image Tools</span>
             </div>
+            <div class="tool-card" data-category="image" data-tool-name="Meme Generator">
+                <div class="tool-icon"><i class="fas fa-laugh-squint"></i></div>
+                <h3 class="tool-name">Meme Generator</h3>
+                <p class="tool-desc">Create memes with your images</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
+            <div class="tool-card" data-category="image" data-tool-name="Image Color Picker">
+                <div class="tool-icon"><i class="fas fa-eye-dropper"></i></div>
+                <h3 class="tool-name">Image Color Picker</h3>
+                <p class="tool-desc">Extract colors from your images</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
+            <div class="tool-card" data-category="image" data-tool-name="Convert to Black & White">
+                <div class="tool-icon"><i class="fas fa-moon"></i></div>
+                <h3 class="tool-name">Convert to Black & White</h3>
+                <p class="tool-desc">Transform color images to black and white</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
+            <div class="tool-card" data-category="image" data-tool-name="Cartoonize Image">
+                <div class="tool-icon"><i class="fas fa-paint-brush"></i></div>
+                <h3 class="tool-name">Cartoonize Image</h3>
+                <p class="tool-desc">Turn photos into cartoon images</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
+            <div class="tool-card" data-category="image" data-tool-name="Rotate Image">
+                <div class="tool-icon"><i class="fas fa-sync"></i></div>
+                <h3 class="tool-name">Rotate Image</h3>
+                <p class="tool-desc">Rotate images to correct orientation</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
+            <div class="tool-card" data-category="image" data-tool-name="Flip Image">
+                <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
+                <h3 class="tool-name">Flip Image</h3>
+                <p class="tool-desc">Flip images horizontally or vertically</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
+            <div class="tool-card" data-category="image" data-tool-name="Compress Image">
+                <div class="tool-icon"><i class="fas fa-compress-alt"></i></div>
+                <h3 class="tool-name">Compress Image</h3>
+                <p class="tool-desc">Reduce image file size without losing quality</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
+            <div class="tool-card" data-category="image" data-tool-name="Image to Base64">
+                <div class="tool-icon"><i class="fas fa-code"></i></div>
+                <h3 class="tool-name">Image to Base64</h3>
+                <p class="tool-desc">Convert images to Base64 encoding</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
+            <div class="tool-card" data-category="image" data-tool-name="Base64 to Image">
+                <div class="tool-icon"><i class="fas fa-image"></i></div>
+                <h3 class="tool-name">Base64 to Image</h3>
+                <p class="tool-desc">Convert Base64 strings to images</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
+            <div class="tool-card" data-category="image" data-tool-name="Image Metadata Remover">
+                <div class="tool-icon"><i class="fas fa-trash-alt"></i></div>
+                <h3 class="tool-name">Image Metadata Remover</h3>
+                <p class="tool-desc">Remove metadata from image files</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
 
-            <!-- Video Tools -->
+            <!-- Video Tools (20) -->
             <div class="tool-card" data-category="video" data-tool-name="Video to MP3">
                 <div class="tool-icon"><i class="fas fa-music"></i></div>
                 <h3 class="tool-name">Video to MP3</h3>
                 <p class="tool-desc">Extract audio from video files</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
+            <div class="tool-card" data-category="video" data-tool-name="MP3 to Video">
+                <div class="tool-icon"><i class="fas fa-video"></i></div>
+                <h3 class="tool-name">MP3 to Video</h3>
+                <p class="tool-desc">Convert audio files to video with static image</p>
                 <span class="tool-category">Video Tools</span>
             </div>
             <div class="tool-card" data-category="video" data-tool-name="Video Trim">
@@ -451,10 +910,10 @@
                 <p class="tool-desc">Trim video clips to desired length</p>
                 <span class="tool-category">Video Tools</span>
             </div>
-            <div class="tool-card" data-category="video" data-tool-name="Video Compressor">
-                <div class="tool-icon"><i class="fas fa-compress-alt"></i></div>
-                <h3 class="tool-name">Video Compressor</h3>
-                <p class="tool-desc">Reduce video file size while maintaining quality</p>
+            <div class="tool-card" data-category="video" data-tool-name="Video Crop">
+                <div class="tool-icon"><i class="fas fa-crop-alt"></i></div>
+                <h3 class="tool-name">Video Crop</h3>
+                <p class="tool-desc">Crop video frames to remove unwanted areas</p>
                 <span class="tool-category">Video Tools</span>
             </div>
             <div class="tool-card" data-category="video" data-tool-name="Merge Videos">
@@ -463,10 +922,82 @@
                 <p class="tool-desc">Combine multiple video clips into one</p>
                 <span class="tool-category">Video Tools</span>
             </div>
+            <div class="tool-card" data-category="video" data-tool-name="Video Compressor">
+                <div class="tool-icon"><i class="fas fa-compress-alt"></i></div>
+                <h3 class="tool-name">Video Compressor</h3>
+                <p class="tool-desc">Reduce video file size while maintaining quality</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
             <div class="tool-card" data-category="video" data-tool-name="Video to GIF">
                 <div class="tool-icon"><i class="fas fa-photo-video"></i></div>
                 <h3 class="tool-name">Video to GIF</h3>
                 <p class="tool-desc">Convert video clips to animated GIFs</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
+            <div class="tool-card" data-category="video" data-tool-name="GIF to Video">
+                <div class="tool-icon"><i class="fas fa-video"></i></div>
+                <h3 class="tool-name">GIF to Video</h3>
+                <p class="tool-desc">Convert GIF animations to video format</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
+            <div class="tool-card" data-category="video" data-tool-name="Add Subtitles">
+                <div class="tool-icon"><i class="fas fa-closed-captioning"></i></div>
+                <h3 class="tool-name">Add Subtitles</h3>
+                <p class="tool-desc">Add subtitle tracks to your videos</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
+            <div class="tool-card" data-category="video" data-tool-name="Remove Subtitles">
+                <div class="tool-icon"><i class="fas fa-times-circle"></i></div>
+                <h3 class="tool-name">Remove Subtitles</h3>
+                <p class="tool-desc">Remove subtitles from video files</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
+            <div class="tool-card" data-category="video" data-tool-name="Add Video Watermark">
+                <div class="tool-icon"><i class="fas fa-tint"></i></div>
+                <h3 class="tool-name">Add Video Watermark</h3>
+                <p class="tool-desc">Add watermark to your videos</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
+            <div class="tool-card" data-category="video" data-tool-name="Remove Video Watermark">
+                <div class="tool-icon"><i class="fas fa-eraser"></i></div>
+                <h3 class="tool-name">Remove Video Watermark</h3>
+                <p class="tool-desc">Remove watermarks from videos</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
+            <div class="tool-card" data-category="video" data-tool-name="Rotate Video">
+                <div class="tool-icon"><i class="fas fa-redo"></i></div>
+                <h3 class="tool-name">Rotate Video</h3>
+                <p class="tool-desc">Rotate video orientation</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
+            <div class="tool-card" data-category="video" data-tool-name="Flip Video">
+                <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
+                <h3 class="tool-name">Flip Video</h3>
+                <p class="tool-desc">Flip video horizontally or vertically</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
+            <div class="tool-card" data-category="video" data-tool-name="Video Speed Changer">
+                <div class="tool-icon"><i class="fas fa-tachometer-alt"></i></div>
+                <h3 class="tool-name">Video Speed Changer</h3>
+                <p class="tool-desc">Change playback speed of videos</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
+            <div class="tool-card" data-category="video" data-tool-name="Video Frame Extractor">
+                <div class="tool-icon"><i class="fas fa-image"></i></div>
+                <h3 class="tool-name">Video Frame Extractor</h3>
+                <p class="tool-desc">Extract frames from videos as images</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
+            <div class="tool-card" data-category="video" data-tool-name="Video Converter">
+                <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
+                <h3 class="tool-name">Video Converter</h3>
+                <p class="tool-desc">Convert videos between different formats</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
+            <div class="tool-card" data-category="video" data-tool-name="YouTube Thumbnail Downloader">
+                <div class="tool-icon"><i class="fab fa-youtube"></i></div>
+                <h3 class="tool-name">YouTube Thumbnail Downloader</h3>
+                <p class="tool-desc">Download thumbnails from YouTube videos</p>
                 <span class="tool-category">Video Tools</span>
             </div>
             <div class="tool-card" data-category="video" data-tool-name="Screen Recorder">
@@ -475,8 +1006,14 @@
                 <p class="tool-desc">Record your screen with audio</p>
                 <span class="tool-category">Video Tools</span>
             </div>
+            <div class="tool-card" data-category="video" data-tool-name="Video to Audio">
+                <div class="tool-icon"><i class="fas fa-headphones"></i></div>
+                <h3 class="tool-name">Video to Audio</h3>
+                <p class="tool-desc">Extract audio from video files in various formats</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
 
-            <!-- Sign Tools -->
+            <!-- Sign Tools (10) -->
             <div class="tool-card" data-category="sign" data-tool-name="Signature Maker">
                 <div class="tool-icon"><i class="fas fa-signature"></i></div>
                 <h3 class="tool-name">Signature Maker</h3>
@@ -489,16 +1026,22 @@
                 <p class="tool-desc">Add signatures to PDF documents</p>
                 <span class="tool-category">Sign Tools</span>
             </div>
-            <div class="tool-card" data-category="sign" data-tool-name="E-sign PDF">
-                <div class="tool-icon"><i class="fas fa-file-contract"></i></div>
-                <h3 class="tool-name">E-sign PDF</h3>
-                <p class="tool-desc">Electronically sign PDF documents</p>
+            <div class="tool-card" data-category="sign" data-tool-name="Add Signature on Image">
+                <div class="tool-icon"><i class="fas fa-stamp"></i></div>
+                <h3 class="tool-name">Add Signature on Image</h3>
+                <p class="tool-desc">Place your signature on images</p>
                 <span class="tool-category">Sign Tools</span>
             </div>
-            <div class="tool-card" data-category="sign" data-tool-name="Draw Signature">
-                <div class="tool-icon"><i class="fas fa-pen"></i></div>
-                <h3 class="tool-name">Draw Signature</h3>
-                <p class="tool-desc">Draw your signature with mouse or touch</p>
+            <div class="tool-card" data-category="sign" data-tool-name="Add Signature on Document">
+                <div class="tool-icon"><i class="fas fa-file-contract"></i></div>
+                <h3 class="tool-name">Add Signature on Document</h3>
+                <p class="tool-desc">Add signatures to various document formats</p>
+                <span class="tool-category">Sign Tools</span>
+            </div>
+            <div class="tool-card" data-category="sign" data-tool-name="Signature Scanner">
+                <div class="tool-icon"><i class="fas fa-search"></i></div>
+                <h3 class="tool-name">Signature Scanner</h3>
+                <p class="tool-desc">Scan and digitize handwritten signatures</p>
                 <span class="tool-category">Sign Tools</span>
             </div>
             <div class="tool-card" data-category="sign" data-tool-name="Digital Signature Validator">
@@ -507,82 +1050,137 @@
                 <p class="tool-desc">Validate digital signatures on documents</p>
                 <span class="tool-category">Sign Tools</span>
             </div>
-            <div class="tool-card" data-category="sign" data-tool-name="Add Signature on Image">
-                <div class="tool-icon"><i class="fas fa-stamp"></i></div>
-                <h3 class="tool-name">Add Signature on Image</h3>
-                <p class="tool-desc">Place your signature on images</p>
+            <div class="tool-card" data-category="sign" data-tool-name="Signature to Transparent PNG">
+                <div class="tool-icon"><i class="fas fa-file-image"></i></div>
+                <h3 class="tool-name">Signature to Transparent PNG</h3>
+                <p class="tool-desc">Create transparent PNG signatures</p>
+                <span class="tool-category">Sign Tools</span>
+            </div>
+            <div class="tool-card" data-category="sign" data-tool-name="Handwriting to Signature Style">
+                <div class="tool-icon"><i class="fas fa-pen-fancy"></i></div>
+                <h3 class="tool-name">Handwriting to Signature Style</h3>
+                <p class="tool-desc">Convert handwriting to signature style</p>
+                <span class="tool-category">Sign Tools</span>
+            </div>
+            <div class="tool-card" data-category="sign" data-tool-name="Draw Signature Online">
+                <div class="tool-icon"><i class="fas fa-pen"></i></div>
+                <h3 class="tool-name">Draw Signature Online</h3>
+                <p class="tool-desc">Draw your signature with mouse or touch</p>
+                <span class="tool-category">Sign Tools</span>
+            </div>
+            <div class="tool-card" data-category="sign" data-tool-name="E-sign PDF">
+                <div class="tool-icon"><i class="fas fa-file-contract"></i></div>
+                <h3 class="tool-name">E-sign PDF</h3>
+                <p class="tool-desc">Electronically sign PDF documents</p>
                 <span class="tool-category">Sign Tools</span>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer id="contact">
-        <div class="footer-container">
-            <div class="footer-info">
-                <div class="footer-logo">Tools Wonder</div>
-                <p class="footer-tagline">Simplifying your digital life.</p>
-                <div class="footer-contact">contact@clickdera.in</div>
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>About Clickdera</h3>
+                <p class="footer-about">Clickdera provides a comprehensive suite of free online tools to help you convert, edit, and manage your files with ease and efficiency.</p>
             </div>
-            <div class="footer-links">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Use</a>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="tools.html">Tools</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Tool Categories</h3>
+                <ul class="footer-links">
+                    <li><a href="#" data-category="pdf">PDF Tools</a></li>
+                    <li><a href="#" data-category="image">Image Tools</a></li>
+                    <li><a href="#" data-category="video">Video Tools</a></li>
+                    <li><a href="#" data-category="sign">Sign Tools</a></li>
+                </ul>
             </div>
         </div>
-        <div class="copyright">
-            &copy; 2023 Tools Wonder. All rights reserved.
+        <div class="footer-bottom">
+            <p>&copy; 2025 Clickdera. All Rights Reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
         </div>
     </footer>
 
-    <!-- Bottom Navigation (Mobile Only) -->
-    <nav class="bottom-nav">
-        <div class="bottom-nav-items">
-            <a href="index.html" class="bottom-nav-item">
-                <div class="bottom-nav-icon"><i class="fas fa-home"></i></div>
-                <span>Home</span>
-            </a>
-            <a href="tools.html" class="bottom-nav-item active">
-                <div class="bottom-nav-icon"><i class="fas fa-tools"></i></div>
-                <span>Tools</span>
-            </a>
-            <a href="#" class="bottom-nav-item">
-                <div class="bottom-nav-icon"><i class="fas fa-share-alt"></i></div>
-                <span>Social</span>
-            </a>
-            <a href="blogs.html" class="bottom-nav-item">
-                <div class="bottom-nav-icon"><i class="fas fa-blog"></i></div>
-                <span>Blogs</span>
-            </a>
-        </div>
-    </nav>
-
     <script>
-        // Filter and Search functionality
+        // Mobile Navigation Functionality
         document.addEventListener('DOMContentLoaded', function() {
-            const toolSearch = document.getElementById('toolSearch');
-            const filterChips = document.querySelectorAll('.filter-chip');
-            const toolCards = document.querySelectorAll('.tool-card');
+            const hamburger = document.querySelector('.hamburger');
+            const closeMenu = document.querySelector('.close-menu');
+            const mobileNav = document.querySelector('.mobile-nav');
+            const overlay = document.querySelector('.overlay');
             
-            // Search functionality
-            toolSearch.addEventListener('keyup', function() {
-                const searchTerm = this.value.toLowerCase();
-                const activeFilter = document.querySelector('.filter-chip.active').dataset.filter;
-                
-                filterTools(searchTerm, activeFilter);
+            // Open mobile menu
+            hamburger.addEventListener('click', function() {
+                mobileNav.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
             });
             
-            // Filter functionality
-            filterChips.forEach(chip => {
-                chip.addEventListener('click', function() {
-                    // Remove active class from all chips
-                    filterChips.forEach(c => c.classList.remove('active'));
-                    // Add active class to clicked chip
+            // Close mobile menu
+            function closeMobileMenu() {
+                mobileNav.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+            
+            closeMenu.addEventListener('click', closeMobileMenu);
+            overlay.addEventListener('click', closeMobileMenu);
+            
+            // Filter and Search functionality
+            const heroSearch = document.getElementById('heroSearch');
+            const toolBadges = document.querySelectorAll('.tool-badge');
+            const toolCards = document.querySelectorAll('.tool-card');
+            const footerLinks = document.querySelectorAll('.footer-links a[data-category]');
+            
+            // Hero search functionality
+            heroSearch.addEventListener('keyup', function() {
+                const searchTerm = this.value.toLowerCase();
+                const activeCategory = document.querySelector('.tool-badge.active').dataset.category;
+                
+                filterTools(searchTerm, activeCategory);
+            });
+            
+            // Tool badge functionality
+            toolBadges.forEach(badge => {
+                badge.addEventListener('click', function() {
+                    // Remove active class from all badges
+                    toolBadges.forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked badge
                     this.classList.add('active');
                     
-                    const searchTerm = toolSearch.value.toLowerCase();
-                    const filter = this.dataset.filter;
+                    const searchTerm = heroSearch.value.toLowerCase();
+                    const category = this.dataset.category;
                     
-                    filterTools(searchTerm, filter);
+                    filterTools(searchTerm, category);
+                });
+            });
+            
+            // Footer category links functionality
+            footerLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const category = this.dataset.category;
+                    
+                    // Remove active class from all badges
+                    toolBadges.forEach(b => b.classList.remove('active'));
+                    // Add active class to corresponding badge
+                    document.querySelector(`.tool-badge[data-category="${category}"]`).classList.add('active');
+                    
+                    // Filter tools
+                    filterTools('', category);
+                    
+                    // Scroll to tools section
+                    document.getElementById('tools-section').scrollIntoView({
+                        behavior: 'smooth'
+                    });
                 });
             });
             
@@ -595,22 +1193,42 @@
                 });
             });
             
-            function filterTools(searchTerm, filter) {
+            function filterTools(searchTerm, category) {
                 toolCards.forEach(card => {
                     const toolName = card.dataset.toolName.toLowerCase();
                     const toolDesc = card.querySelector('.tool-desc').textContent.toLowerCase();
                     const toolCategory = card.dataset.category;
                     
                     const matchesSearch = toolName.includes(searchTerm) || toolDesc.includes(searchTerm);
-                    const matchesFilter = filter === 'all' || toolCategory === filter;
+                    const matchesCategory = category === 'all' || toolCategory === category;
                     
-                    if (matchesSearch && matchesFilter) {
+                    if (matchesSearch && matchesCategory) {
                         card.style.display = 'flex';
                     } else {
                         card.style.display = 'none';
                     }
                 });
             }
+            
+            // Animate tool cards on scroll
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all tool cards
+            toolCards.forEach(card => {
+                observer.observe(card);
+            });
         });
     </script>
 </body>

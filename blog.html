@@ -16,6 +16,7 @@
         :root {
             --primary: #4361ee;
             --secondary: #3a0ca3;
+            --accent: #f72585;
             --dark: #212529;
             --light: #f8f9fa;
             --transition: all 0.3s ease;
@@ -331,7 +332,7 @@
             font-size: 0.8rem;
         }
 
-        .blog-views {
+        .blog-stats {
             display: flex;
             flex-direction: column;
             gap: 3px;
@@ -340,7 +341,7 @@
             color: #666;
         }
 
-        .view-count {
+        .stat-count {
             display: flex;
             align-items: center;
             gap: 4px;
@@ -423,7 +424,7 @@
             margin-bottom: 30px;
         }
 
-        .read-mode-views {
+        .read-mode-stats {
             display: flex;
             gap: 15px;
             margin-top: 30px;
@@ -431,12 +432,29 @@
             border-top: 1px solid #eee;
         }
 
-        .view-stat {
+        .stat {
             display: flex;
             align-items: center;
             gap: 5px;
             font-size: 0.9rem;
             color: #666;
+        }
+
+        .like-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #ccc;
+            transition: var(--transition);
+        }
+
+        .like-btn.liked {
+            color: var(--accent);
+        }
+
+        .like-btn:hover {
+            transform: scale(1.1);
         }
 
         /* Footer Styles */
@@ -656,14 +674,16 @@
             <span class="blog-category" id="readModeCategory"></span>
             <h1 class="read-mode-title" id="readModeTitle"></h1>
             <div class="read-mode-body" id="readModeBody"></div>
-            <div class="read-mode-views">
-                <div class="view-stat">
+            <div class="read-mode-stats">
+                <div class="stat">
                     <i class="fas fa-eye"></i>
-                    <span id="readModeTotalViews">0</span> total views
+                    <span id="readModeTotalViews">0</span> views
                 </div>
-                <div class="view-stat">
-                    <i class="fas fa-users"></i>
-                    <span id="readModeUniqueViews">0</span> unique viewers
+                <div class="stat">
+                    <button class="like-btn" id="readModeLikeBtn">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                    <span id="readModeLikes">0</span> likes
                 </div>
             </div>
         </div>
@@ -766,6 +786,35 @@
             });
         }
 
+        // Function to handle likes
+        function handleLike(postId) {
+            const userId = getUserId();
+            const userLikeRef = rtdb.ref(`postLikes/${postId}/users/${userId}`);
+            
+            // Check if user already liked this post
+            userLikeRef.once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    // User already liked, so unlike
+                    userLikeRef.remove();
+                    
+                    // Decrement total likes
+                    const totalLikesRef = rtdb.ref(`postLikes/${postId}/totalLikes`);
+                    totalLikesRef.transaction((current) => {
+                        return (current || 0) - 1;
+                    });
+                } else {
+                    // User hasn't liked, so add like
+                    userLikeRef.set(true);
+                    
+                    // Increment total likes
+                    const totalLikesRef = rtdb.ref(`postLikes/${postId}/totalLikes`);
+                    totalLikesRef.transaction((current) => {
+                        return (current || 0) + 1;
+                    });
+                }
+            });
+        }
+
         // Function to load blog posts from Firebase
         function loadBlogPosts() {
             const blogGrid = document.getElementById('blogGrid');
@@ -797,9 +846,9 @@
                                 <span>${post.date}</span>
                                 <span>${post.readTime} read</span>
                             </div>
-                            <div class="blog-views" id="views-${postId}">
-                                <div class="view-count"><i class="fas fa-eye"></i> <span id="total-${postId}">0</span> total views</div>
-                                <div class="view-count"><i class="fas fa-users"></i> <span id="unique-${postId}">0</span> unique viewers</div>
+                            <div class="blog-stats" id="stats-${postId}">
+                                <div class="stat-count"><i class="fas fa-eye"></i> <span id="total-${postId}">0</span> views</div>
+                                <div class="stat-count"><i class="fas fa-heart"></i> <span id="likes-${postId}">0</span> likes</div>
                             </div>
                             <button class="read-more-btn">Read More</button>
                         </div>
@@ -815,8 +864,9 @@
                     
                     blogGrid.appendChild(blogCard);
                     
-                    // Load view counts from Realtime Database
+                    // Load view and like counts from Realtime Database
                     loadViewCounts(postId);
+                    loadLikeCounts(postId);
                 });
             }).catch((error) => {
                 console.log("Error getting documents: ", error);
@@ -832,7 +882,8 @@
             const readModeTitle = document.getElementById('readModeTitle');
             const readModeBody = document.getElementById('readModeBody');
             const readModeTotalViews = document.getElementById('readModeTotalViews');
-            const readModeUniqueViews = document.getElementById('readModeUniqueViews');
+            const readModeLikes = document.getElementById('readModeLikes');
+            const readModeLikeBtn = document.getElementById('readModeLikeBtn');
             
             // Set post content
             readModeImage.src = post.image;
@@ -854,11 +905,26 @@
                 readModeTotalViews.textContent = totalViews;
             });
             
-            rtdb.ref(`postViews/${postId}/users`).once('value', (snapshot) => {
-                const users = snapshot.val() || {};
-                const uniqueViewers = Object.keys(users).length;
-                readModeUniqueViews.textContent = uniqueViewers;
+            // Show current like counts and set up like button
+            rtdb.ref(`postLikes/${postId}/totalLikes`).once('value', (snapshot) => {
+                const totalLikes = snapshot.val() || 0;
+                readModeLikes.textContent = totalLikes;
             });
+            
+            // Check if user already liked this post
+            const userId = getUserId();
+            rtdb.ref(`postLikes/${postId}/users/${userId}`).once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    readModeLikeBtn.classList.add('liked');
+                } else {
+                    readModeLikeBtn.classList.remove('liked');
+                }
+            });
+            
+            // Set up like button click handler
+            readModeLikeBtn.onclick = () => {
+                handleLike(postId);
+            };
             
             // Show read mode
             readModeContainer.style.display = 'block';
@@ -866,6 +932,25 @@
             
             // Scroll to top
             window.scrollTo(0, 0);
+            
+            // Set up real-time updates for views and likes in read mode
+            rtdb.ref(`postViews/${postId}/totalViews`).on('value', (snapshot) => {
+                const totalViews = snapshot.val() || 0;
+                readModeTotalViews.textContent = totalViews;
+            });
+            
+            rtdb.ref(`postLikes/${postId}/totalLikes`).on('value', (snapshot) => {
+                const totalLikes = snapshot.val() || 0;
+                readModeLikes.textContent = totalLikes;
+            });
+            
+            rtdb.ref(`postLikes/${postId}/users/${userId}`).on('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    readModeLikeBtn.classList.add('liked');
+                } else {
+                    readModeLikeBtn.classList.remove('liked');
+                }
+            });
         }
 
         // Function to load view counts from Realtime Database
@@ -878,14 +963,16 @@
                     totalElement.textContent = totalViews;
                 }
             });
-            
-            // Listen for unique viewers count
-            rtdb.ref(`postViews/${postId}/users`).on('value', (snapshot) => {
-                const users = snapshot.val() || {};
-                const uniqueViewers = Object.keys(users).length;
-                const uniqueElement = document.getElementById(`unique-${postId}`);
-                if (uniqueElement) {
-                    uniqueElement.textContent = uniqueViewers;
+        }
+
+        // Function to load like counts from Realtime Database
+        function loadLikeCounts(postId) {
+            // Listen for total likes changes
+            rtdb.ref(`postLikes/${postId}/totalLikes`).on('value', (snapshot) => {
+                const totalLikes = snapshot.val() || 0;
+                const likesElement = document.getElementById(`likes-${postId}`);
+                if (likesElement) {
+                    likesElement.textContent = totalLikes;
                 }
             });
         }
@@ -919,37 +1006,10 @@
                     readTime: "3 min",
                     image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
                     views: 0
-                },
-                {
-                    title: "The Future of Web Development: 2025 Trends",
-                    excerpt: "Explore the emerging technologies and methodologies that will shape web development in the coming year.",
-                    category: "Insights",
-                    date: "March 30, 2025",
-                    readTime: "7 min",
-                    image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-                    views: 0
-                },
-                {
-                    title: "Optimizing Website Performance for Mobile Users",
-                    excerpt: "Best practices for ensuring your website loads quickly and performs well on mobile devices.",
-                    category: "Tips",
-                    date: "March 22, 2025",
-                    readTime: "6 min",
-                    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-                    views: 0
-                },
-                {
-                    title: "Building Accessible Web Applications",
-                    excerpt: "Why accessibility matters and how to implement it in your web projects.",
-                    category: "Tutorial",
-                    date: "March 15, 2025",
-                    readTime: "9 min",
-                    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-                    views: 0
                 }
             ];
 
-            samplePosts.forEach((post, index) => {
+            samplePosts.forEach((post) => {
                 db.collection("blogPosts").add(post);
             });
         }

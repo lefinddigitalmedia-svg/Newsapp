@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clickdera Blog</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light);
+            color: #333;
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        body.read-mode {
+            background-color: #2c3e50;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: white;
+            padding: 15px 0;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .header.scrolled {
+            padding: 10px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .logo i {
+            font-size: 24px;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            color: var(--secondary);
+        }
+
+        .logo:hover i {
+            color: var(--secondary);
+        }
+
+        .nav-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            left: 0;
+            bottom: 0;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .hamburger .bar {
+            width: 25px;
+            height: 3px;
+            background-color: var(--dark);
+            margin: 3px 0;
+            transition: var(--transition);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            padding: 100px 0;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.9) 0%, rgba(58, 12, 163, 0.9) 100%);
+            color: white;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='5' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E");
+            animation: rotate 30s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .search-button:hover {
+            background: var(--secondary);
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .cta-button:hover {
+            background: linear-gradient(135deg, #3a0ca3 0%, #4361ee 100%);
+            transform: translateY(-2px);
+        }
+
+        /* Blog Content Section */
+        .blog-content {
+            padding: 60px 0;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .blog-image {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .blog-details {
+            padding: 20px;
+        }
+
+        .blog-category {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        .blog-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .blog-excerpt {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .blog-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        .blog-views {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .view-count {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .read-more-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .read-more-btn:hover {
+            background: var(--secondary);
+        }
+
+        /* Read Mode Styles */
+        .read-mode-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .read-mode-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-button:hover {
+            background: var(--secondary);
+        }
+
+        .read-mode-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .read-mode-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .read-mode-body {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 30px;
+        }
+
+        .read-mode-views {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .view-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: linear-gradient(135deg, #212529 0%, #2c3e50 100%);
+            color: white;
+            padding: 60px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-column h3 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: #4361ee;
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #b0c4de;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .footer-links a:hover {
+            color: #4361ee;
+            transform: translateX(5px);
+        }
+
+        .footer-about {
+            color: #b0c4de;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 25px;
+            text-align: center;
+            max-width: 1200px;
+            margin: 40px auto 0;
+        }
+
+        .footer-bottom p {
+            color: #b0c4de;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 12px 0;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background-color: white;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                padding: 20px 0;
+                z-index: 999;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                margin: 0;
+                text-align: center;
+                width: 100%;
+            }
+
+            .nav-links a {
+                display: block;
+                padding: 15px 20px;
+                width: 100%;
+            }
+
+            .nav-links a::after {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hamburger.active .bar:nth-child(1) {
+                transform: rotate(-45deg) translate(-5px, 6px);
+            }
+
+            .hamburger.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active .bar:nth-child(3) {
+                transform: rotate(45deg) translate(-5px, -6px);
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .filters {
+                gap: 5px;
+            }
+
+            .filter-btn {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+
+            .read-mode-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header" id="header">
+        <div class="container navbar">
+            <a href="index.html" class="logo"><i class="fas fa-tools"></i> Clickdera</a>
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="tools.html">Tools</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="blog.html" class="active">Blog</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <div class="hamburger" id="hamburger">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Clickdera Blog</h1>
+            <p>Stay updated with the latest tools, tips, and industry insights</p>
+            
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search blog posts...">
+                <button class="search-button">Search</button>
+            </div>
+            
+            <div class="filters">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Our Partners</button>
+                <button class="filter-btn">Case Studies</button>
+                <button class="filter-btn">Updates</button>
+                <button class="filter-btn">Tips</button>
+                <button class="filter-btn">Games</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Content Section -->
+    <section class="blog-content container">
+        <h2>Latest Articles</h2>
+        <div class="blog-grid" id="blogGrid">
+            <!-- Blog posts will be loaded here from Firebase -->
+        </div>
+    </section>
+
+    <!-- Read Mode Container -->
+    <div class="read-mode-container" id="readModeContainer">
+        <div class="read-mode-content">
+            <button class="back-button" id="backButton">
+                <i class="fas fa-arrow-left"></i> Back to Articles
+            </button>
+            <img src="" alt="" class="read-mode-image" id="readModeImage">
+            <span class="blog-category" id="readModeCategory"></span>
+            <h1 class="read-mode-title" id="readModeTitle"></h1>
+            <div class="read-mode-body" id="readModeBody"></div>
+            <div class="read-mode-views">
+                <div class="view-stat">
+                    <i class="fas fa-eye"></i>
+                    <span id="readModeTotalViews">0</span> total views
+                </div>
+                <div class="view-stat">
+                    <i class="fas fa-users"></i>
+                    <span id="readModeUniqueViews">0</span> unique viewers
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>About Clickdera</h3>
+                <p class="footer-about">Clickdera provides a comprehensive suite of free online tools to help you convert, edit, and manage your files with ease and efficiency.</p>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="tools.html">Tools</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Tool Categories</h3>
+                <ul class="footer-links">
+                    <li><a href="#" data-category="pdf">PDF Tools</a></li>
+                    <li><a href="#" data-category="image">Image Tools</a></li>
+                    <li><a href="#" data-category="video">Video Tools</a></li>
+                    <li><a href="#" data-category="sign">Sign Tools</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Clickdera. All Rights Reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <!-- Firebase Initialization -->
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCHyHY4nloMaHTtnbTl4S8o-xySIr5WRtQ",
+            authDomain: "clickdera-d7a13.firebaseapp.com",
+            databaseURL: "https://clickdera-d7a13-default-rtdb.firebaseio.com",
+            projectId: "clickdera-d7a13",
+            storageBucket: "clickdera-d7a13.firebasestorage.app",
+            messagingSenderId: "29336159224",
+            appId: "1:29336159224:web:46526411ec667cd5074c0d",
+            measurementId: "G-8KX4KKXP80"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const rtdb = firebase.database();
+
+        // Generate a unique identifier for this user/browser
+        function getUserId() {
+            let userId = localStorage.getItem('clickdera_userId');
+            if (!userId) {
+                userId = 'user_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('clickdera_userId', userId);
+            }
+            return userId;
+        }
+
+        // Function to track post views (only when in read mode)
+        function trackPostView(postId, postTitle) {
+            const userId = getUserId();
+            const timestamp = Date.now();
+            
+            // Update view count in Firestore
+            const postRef = db.collection("blogPosts").doc(postId);
+            postRef.update({
+                views: firebase.firestore.FieldValue.increment(1),
+                lastViewed: timestamp
+            }).catch(error => {
+                console.error("Error updating view count: ", error);
+            });
+            
+            // Track user view in Realtime Database
+            const userViewRef = rtdb.ref(`postViews/${postId}/users/${userId}`);
+            userViewRef.transaction((current) => {
+                return (current || 0) + 1;
+            });
+            
+            // Update total views in Realtime Database
+            const totalViewsRef = rtdb.ref(`postViews/${postId}/totalViews`);
+            totalViewsRef.transaction((current) => {
+                return (current || 0) + 1;
+            });
+            
+            // Store view details for analytics
+            const viewDetailRef = rtdb.ref(`viewDetails/${postId}/${timestamp}`);
+            viewDetailRef.set({
+                userId: userId,
+                postId: postId,
+                postTitle: postTitle,
+                timestamp: timestamp
+            });
+        }
+
+        // Function to load blog posts from Firebase
+        function loadBlogPosts() {
+            const blogGrid = document.getElementById('blogGrid');
+            
+            db.collection("blogPosts").orderBy("date", "desc").get().then((querySnapshot) => {
+                if (querySnapshot.empty) {
+                    // Add sample data if no posts exist
+                    addSamplePosts();
+                    loadBlogPosts(); // Reload after adding samples
+                    return;
+                }
+                
+                querySnapshot.forEach((doc) => {
+                    const post = doc.data();
+                    const postId = doc.id;
+                    
+                    // Create blog card
+                    const blogCard = document.createElement('div');
+                    blogCard.className = 'blog-card';
+                    blogCard.setAttribute('data-postid', postId);
+                    
+                    blogCard.innerHTML = `
+                        <img src="${post.image}" alt="${post.title}" class="blog-image">
+                        <div class="blog-details">
+                            <span class="blog-category">${post.category}</span>
+                            <h3 class="blog-title">${post.title}</h3>
+                            <p class="blog-excerpt">${post.excerpt}</p>
+                            <div class="blog-meta">
+                                <span>${post.date}</span>
+                                <span>${post.readTime} read</span>
+                            </div>
+                            <div class="blog-views" id="views-${postId}">
+                                <div class="view-count"><i class="fas fa-eye"></i> <span id="total-${postId}">0</span> total views</div>
+                                <div class="view-count"><i class="fas fa-users"></i> <span id="unique-${postId}">0</span> unique viewers</div>
+                            </div>
+                            <button class="read-more-btn">Read More</button>
+                        </div>
+                    `;
+                    
+                    // Add click event to track views only when entering read mode
+                    const readMoreBtn = blogCard.querySelector('.read-more-btn');
+                    readMoreBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        showReadMode(postId, post);
+                        trackPostView(postId, post.title);
+                    });
+                    
+                    blogGrid.appendChild(blogCard);
+                    
+                    // Load view counts from Realtime Database
+                    loadViewCounts(postId);
+                });
+            }).catch((error) => {
+                console.log("Error getting documents: ", error);
+                blogGrid.innerHTML = '<p>Error loading blog posts. Please try again later.</p>';
+            });
+        }
+
+        // Function to show read mode with full post content
+        function showReadMode(postId, post) {
+            const readModeContainer = document.getElementById('readModeContainer');
+            const readModeImage = document.getElementById('readModeImage');
+            const readModeCategory = document.getElementById('readModeCategory');
+            const readModeTitle = document.getElementById('readModeTitle');
+            const readModeBody = document.getElementById('readModeBody');
+            const readModeTotalViews = document.getElementById('readModeTotalViews');
+            const readModeUniqueViews = document.getElementById('readModeUniqueViews');
+            
+            // Set post content
+            readModeImage.src = post.image;
+            readModeCategory.textContent = post.category;
+            readModeTitle.textContent = post.title;
+            
+            // Generate full content (in a real app, this would come from the database)
+            readModeBody.innerHTML = `
+                <p>${post.excerpt}</p>
+                <p>This is the full content of the blog post. In a real application, this content would be stored in the database and retrieved along with the other post data.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget ultricies ultricies, nunc nisl aliquam nunc, eget aliquam nisl nisl eget nisl. Nullam euismod, nisl eget ultricies ultricies, nunc nisl aliquam nunc, eget aliquam nisl nisl eget nisl.</p>
+                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+            `;
+            
+            // Show current view counts
+            rtdb.ref(`postViews/${postId}/totalViews`).once('value', (snapshot) => {
+                const totalViews = snapshot.val() || 0;
+                readModeTotalViews.textContent = totalViews;
+            });
+            
+            rtdb.ref(`postViews/${postId}/users`).once('value', (snapshot) => {
+                const users = snapshot.val() || {};
+                const uniqueViewers = Object.keys(users).length;
+                readModeUniqueViews.textContent = uniqueViewers;
+            });
+            
+            // Show read mode
+            readModeContainer.style.display = 'block';
+            document.body.classList.add('read-mode');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Function to load view counts from Realtime Database
+        function loadViewCounts(postId) {
+            // Listen for total views changes
+            rtdb.ref(`postViews/${postId}/totalViews`).on('value', (snapshot) => {
+                const totalViews = snapshot.val() || 0;
+                const totalElement = document.getElementById(`total-${postId}`);
+                if (totalElement) {
+                    totalElement.textContent = totalViews;
+                }
+            });
+            
+            // Listen for unique viewers count
+            rtdb.ref(`postViews/${postId}/users`).on('value', (snapshot) => {
+                const users = snapshot.val() || {};
+                const uniqueViewers = Object.keys(users).length;
+                const uniqueElement = document.getElementById(`unique-${postId}`);
+                if (uniqueElement) {
+                    uniqueElement.textContent = uniqueViewers;
+                }
+            });
+        }
+
+        // Function to add sample blog posts
+        function addSamplePosts() {
+            const samplePosts = [
+                {
+                    title: "10 Essential Tools for Web Developers",
+                    excerpt: "Discover the must-have tools that every web developer should have in their toolkit.",
+                    category: "Tips",
+                    date: "May 15, 2025",
+                    readTime: "5 min",
+                    image: "https://images.unsplash.com/photo-1581276879432-15e50529f34b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                    views: 0
+                },
+                {
+                    title: "How We Improved Conversion Rates by 40%",
+                    excerpt: "Learn about the strategies we implemented to dramatically increase our conversion rates.",
+                    category: "Case Studies",
+                    date: "April 28, 2025",
+                    readTime: "8 min",
+                    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                    views: 0
+                },
+                {
+                    title: "New Features in Our Image Converter Tool",
+                    excerpt: "We've added several new features to our image converter based on user feedback.",
+                    category: "Updates",
+                    date: "April 12, 2025",
+                    readTime: "3 min",
+                    image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                    views: 0
+                },
+                {
+                    title: "The Future of Web Development: 2025 Trends",
+                    excerpt: "Explore the emerging technologies and methodologies that will shape web development in the coming year.",
+                    category: "Insights",
+                    date: "March 30, 2025",
+                    readTime: "7 min",
+                    image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                    views: 0
+                },
+                {
+                    title: "Optimizing Website Performance for Mobile Users",
+                    excerpt: "Best practices for ensuring your website loads quickly and performs well on mobile devices.",
+                    category: "Tips",
+                    date: "March 22, 2025",
+                    readTime: "6 min",
+                    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                    views: 0
+                },
+                {
+                    title: "Building Accessible Web Applications",
+                    excerpt: "Why accessibility matters and how to implement it in your web projects.",
+                    category: "Tutorial",
+                    date: "March 15, 2025",
+                    readTime: "9 min",
+                    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                    views: 0
+                }
+            ];
+
+            samplePosts.forEach((post, index) => {
+                db.collection("blogPosts").add(post);
+            });
+        }
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        // Close nav menu when a link is clicked (for mobile)
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (navLinks.classList.contains('active')) {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                }
+            });
+        });
+
+        // Filter button functionality
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                // Here you would filter the blog posts based on the selected category
+            });
+        });
+
+        // Back button functionality
+        document.getElementById('backButton').addEventListener('click', function() {
+            document.getElementById('readModeContainer').style.display = 'none';
+            document.body.classList.remove('read-mode');
+        });
+
+        // Load blog posts when page is ready
+        document.addEventListener('DOMContentLoaded', loadBlogPosts);
+    </script>
+</body>
+</html>

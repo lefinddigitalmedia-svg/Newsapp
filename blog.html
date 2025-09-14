@@ -165,7 +165,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='5' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height'100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='5' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E");
             animation: rotate 30s linear infinite;
             z-index: 0;
         }
@@ -457,6 +457,15 @@
             transform: scale(1.1);
         }
 
+        /* Loading and No Posts Styles */
+        .loading-text, .no-posts {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: #666;
+        }
+
         /* Footer Styles */
         .footer {
             background: linear-gradient(135deg, #212529 0%, #2c3e50 100%);
@@ -646,12 +655,12 @@
             </div>
             
             <div class="filters">
-                <button class="filter-btn active">All</button>
-                <button class="filter-btn">Our Partners</button>
-                <button class="filter-btn">Case Studies</button>
-                <button class="filter-btn">Updates</button>
-                <button class="filter-btn">Tips</button>
-                <button class="filter-btn">Games</button>
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="Our Partners">Our Partners</button>
+                <button class="filter-btn" data-category="Case Studies">Case Studies</button>
+                <button class="filter-btn" data-category="Updates">Updates</button>
+                <button class="filter-btn" data-category="Tips">Tips</button>
+                <button class="filter-btn" data-category="Games">Games</button>
             </div>
         </div>
     </section>
@@ -766,9 +775,7 @@
             
             // Track user view in Realtime Database
             const userViewRef = rtdb.ref(`postViews/${postId}/users/${userId}`);
-            userViewRef.transaction((current) => {
-                return (current || 0) + 1;
-            });
+            userViewRef.set(timestamp);
             
             // Update total views in Realtime Database
             const totalViewsRef = rtdb.ref(`postViews/${postId}/totalViews`);
@@ -815,15 +822,26 @@
             });
         }
 
-        // Function to load blog posts from Firebase
-        function loadBlogPosts() {
+        // Function to load blog posts from Firebase with filtering
+        function loadBlogPosts(category = 'all') {
             const blogGrid = document.getElementById('blogGrid');
+            blogGrid.innerHTML = '<p class="loading-text">Loading posts...</p>';
             
-            db.collection("blogPosts").orderBy("date", "desc").get().then((querySnapshot) => {
+            let query = db.collection("blogPosts").orderBy("date", "desc");
+            
+            if (category !== 'all') {
+                query = query.where("category", "==", category);
+            }
+            
+            query.get().then((querySnapshot) => {
+                blogGrid.innerHTML = '';
+                
                 if (querySnapshot.empty) {
-                    // Add sample data if no posts exist
-                    addSamplePosts();
-                    loadBlogPosts(); // Reload after adding samples
+                    if (category === 'all') {
+                        blogGrid.innerHTML = '<p class="no-posts">No blog posts found. Check back later!</p>';
+                    } else {
+                        blogGrid.innerHTML = `<p class="no-posts">No posts found in the ${category} category.</p>`;
+                    }
                     return;
                 }
                 
@@ -835,6 +853,7 @@
                     const blogCard = document.createElement('div');
                     blogCard.className = 'blog-card';
                     blogCard.setAttribute('data-postid', postId);
+                    blogCard.setAttribute('data-category', post.category);
                     
                     blogCard.innerHTML = `
                         <img src="${post.image}" alt="${post.title}" class="blog-image">
@@ -870,7 +889,7 @@
                 });
             }).catch((error) => {
                 console.log("Error getting documents: ", error);
-                blogGrid.innerHTML = '<p>Error loading blog posts. Please try again later.</p>';
+                blogGrid.innerHTML = '<p class="no-posts">Error loading blog posts. Please try again later.</p>';
             });
         }
 
@@ -890,14 +909,18 @@
             readModeCategory.textContent = post.category;
             readModeTitle.textContent = post.title;
             
-            // Generate full content (in a real app, this would come from the database)
-            readModeBody.innerHTML = `
-                <p>${post.excerpt}</p>
-                <p>This is the full content of the blog post. In a real application, this content would be stored in the database and retrieved along with the other post data.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget ultricies ultricies, nunc nisl aliquam nunc, eget aliquam nisl nisl eget nisl. Nullam euismod, nisl eget ultricies ultricies, nunc nisl aliquam nunc, eget aliquam nisl nisl eget nisl.</p>
-                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-                <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
-            `;
+            // Use the actual content from Firebase if available, otherwise use placeholder
+            if (post.content) {
+                readModeBody.innerHTML = post.content;
+            } else {
+                readModeBody.innerHTML = `
+                    <p>${post.excerpt}</p>
+                    <p>This is the full content of the blog post. In a real application, this content would be stored in the database and retrieved along with the other post data.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget ultricies ultricies, nunc nisl aliquam nunc, eget aliquam nisl nisl eget nisl. Nullam euismod, nisl eget ultricies ultricies, nunc nisl aliquam nunc, eget aliquam nisl nisl eget nisl.</p>
+                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                    <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+                `;
+            }
             
             // Show current view counts
             rtdb.ref(`postViews/${postId}/totalViews`).once('value', (snapshot) => {
@@ -977,43 +1000,6 @@
             });
         }
 
-        // Function to add sample blog posts
-        function addSamplePosts() {
-            const samplePosts = [
-                {
-                    title: "10 Essential Tools for Web Developers",
-                    excerpt: "Discover the must-have tools that every web developer should have in their toolkit.",
-                    category: "Tips",
-                    date: "May 15, 2025",
-                    readTime: "5 min",
-                    image: "https://images.unsplash.com/photo-1581276879432-15e50529f34b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-                    views: 0
-                },
-                {
-                    title: "How We Improved Conversion Rates by 40%",
-                    excerpt: "Learn about the strategies we implemented to dramatically increase our conversion rates.",
-                    category: "Case Studies",
-                    date: "April 28, 2025",
-                    readTime: "8 min",
-                    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-                    views: 0
-                },
-                {
-                    title: "New Features in Our Image Converter Tool",
-                    excerpt: "We've added several new features to our image converter based on user feedback.",
-                    category: "Updates",
-                    date: "April 12, 2025",
-                    readTime: "3 min",
-                    image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-                    views: 0
-                }
-            ];
-
-            samplePosts.forEach((post) => {
-                db.collection("blogPosts").add(post);
-            });
-        }
-
         // Header scroll effect
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
@@ -1043,14 +1029,19 @@
             });
         });
 
-        // Filter button functionality
+        // Filter button functionality - FIXED
         document.querySelectorAll('.filter-btn').forEach(button => {
             button.addEventListener('click', function() {
                 document.querySelectorAll('.filter-btn').forEach(btn => {
                     btn.classList.remove('active');
                 });
                 this.classList.add('active');
-                // Here you would filter the blog posts based on the selected category
+                
+                // Get the category from data attribute
+                const category = this.getAttribute('data-category');
+                
+                // Load posts for this category
+                loadBlogPosts(category);
             });
         });
 
@@ -1061,7 +1052,9 @@
         });
 
         // Load blog posts when page is ready
-        document.addEventListener('DOMContentLoaded', loadBlogPosts);
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBlogPosts();
+        });
     </script>
 </body>
 </html>

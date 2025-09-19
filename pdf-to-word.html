@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDF to DOCX Converter</title>
+  <title>PDF to DOCX (Preserve Layout)</title>
 
   <!-- PDF.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
@@ -12,166 +12,98 @@
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js";
   </script>
 
-  <!-- DOCX.js (working UMD build) -->
+  <!-- DOCX.js -->
   <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
-
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
     body {
-      font-family: "Segoe UI", sans-serif;
+      font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      height: 100vh;
       margin: 0;
       background: linear-gradient(135deg, #4facfe, #00f2fe);
-      color: #333;
     }
-
-    .container {
+    .box {
       background: #fff;
-      padding: 25px;
-      border-radius: 16px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-      max-width: 450px;
-      width: 100%;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 1.6rem;
-      margin-bottom: 10px;
-      color: #007BFF;
-    }
-
-    p {
-      font-size: 0.95rem;
-      color: #555;
-      margin-bottom: 20px;
-    }
-
-    .upload-box {
-      border: 2px dashed #007BFF;
-      padding: 25px;
+      padding: 20px;
       border-radius: 12px;
-      cursor: pointer;
-      transition: 0.3s;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     }
-
-    .upload-box:hover {
-      background: #f0f8ff;
-    }
-
-    .upload-box i {
-      font-size: 2rem;
-      color: #007BFF;
-      margin-bottom: 8px;
-    }
-
-    input[type="file"] {
-      display: none;
-    }
-
     button {
-      margin-top: 20px;
-      background: #007BFF;
-      color: white;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #007bff;
+      color: #fff;
       border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      justify-content: center;
-      width: 100%;
-      transition: 0.3s;
     }
-
     button:hover {
       background: #0056b3;
-      transform: scale(1.03);
-    }
-
-    #status {
-      margin-top: 15px;
-      font-size: 0.9rem;
-      color: #444;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1><i class="fa-solid fa-file-pdf"></i> PDF to DOCX</h1>
-    <p>Convert your PDF documents into editable Word files easily.</p>
-
-    <label for="pdfFile" class="upload-box">
-      <i class="fa-solid fa-upload"></i><br>
-      <span id="fileLabel">Choose PDF File</span>
-      <input type="file" id="pdfFile" accept="application/pdf">
-    </label>
-
-    <button onclick="convertPDF()">
-      <i class="fa-solid fa-file-word"></i> Convert to DOCX
-    </button>
-
-    <div id="status"></div>
+  <div class="box">
+    <h2>PDF to DOCX (Keep Formatting)</h2>
+    <input type="file" id="pdfFile" accept="application/pdf"><br>
+    <button onclick="convertPDF()">Convert</button>
+    <p id="status"></p>
   </div>
 
   <script>
-    const fileInput = document.getElementById('pdfFile');
-    const fileLabel = document.getElementById('fileLabel');
-    const status = document.getElementById('status');
-
-    fileInput.addEventListener("change", () => {
-      fileLabel.textContent = fileInput.files.length ? fileInput.files[0].name : "Choose PDF File";
-    });
-
     async function convertPDF() {
+      const fileInput = document.getElementById("pdfFile");
+      const status = document.getElementById("status");
+
       if (!fileInput.files.length) {
         alert("Please select a PDF file");
         return;
       }
 
-      const file = fileInput.files[0];
       status.textContent = "Reading PDF...";
+      const file = fileInput.files[0];
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
 
-      const fileReader = new FileReader();
-      fileReader.onload = async function() {
-        try {
-          const typedArray = new Uint8Array(this.result);
-          const pdf = await pdfjsLib.getDocument(typedArray).promise;
+      let children = [];
 
-          let paragraphs = [];
-          for (let i = 1; i <= pdf.numPages; i++) {
-            const page = await pdf.getPage(i);
-            const textContent = await page.getTextContent();
-            const textItems = textContent.items.map(item => item.str).join(" ");
-            paragraphs.push(new docx.Paragraph(textItems));
-          }
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({ scale: 2 });
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
 
-          const doc = new docx.Document({
-            sections: [{ properties: {}, children: paragraphs }]
-          });
+        await page.render({ canvasContext: context, viewport: viewport }).promise;
 
-          status.textContent = "Generating DOCX...";
-          const blob = await docx.Packer.toBlob(doc);
+        // Convert canvas to base64 image
+        const imgData = canvas.toDataURL("image/png");
+        const image = docx.Media.addImage(
+          new docx.Document(),
+          await fetch(imgData).then(r => r.blob())
+        );
 
-          const link = document.createElement("a");
-          link.href = URL.createObjectURL(blob);
-          link.download = file.name.replace(/\.pdf$/i, "") + ".docx";
-          link.click();
+        children.push(new docx.Paragraph(image));
+      }
 
-          status.innerHTML = `<span style="color:green"><i class="fa-solid fa-check-circle"></i> Conversion complete!</span>`;
-        } catch (err) {
-          console.error(err);
-          status.innerHTML = `<span style="color:red"><i class="fa-solid fa-times-circle"></i> Error converting file.</span>`;
-        }
-      };
-      fileReader.readAsArrayBuffer(file);
+      const doc = new docx.Document({
+        sections: [{ children }]
+      });
+
+      status.textContent = "Generating DOCX...";
+      const blob = await docx.Packer.toBlob(doc);
+
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = file.name.replace(/\.pdf$/i, "") + "_formatted.docx";
+      link.click();
+
+      status.textContent = "Done ✅";
     }
   </script>
 </body>

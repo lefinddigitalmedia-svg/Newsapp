@@ -385,6 +385,13 @@
             font-weight: 50;
         }
 
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+
         /* Footer Styles */
         .footer {
             background: linear-gradient(135deg, #212529 0%, #2c3e50 100%);
@@ -611,7 +618,7 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <h1>70+ Powerful Tools at Your Fingertips</h1>
+            <h1>40+ Powerful Tools at Your Fingertips</h1>
             <p>Convert, edit, and manage your files with our collection of free online tools. No installation required.</p>
             
             <div class="hero-search">
@@ -624,21 +631,21 @@
                     <i class="fas fa-th"></i>
                     <span>All Tools</span>
                 </div>
-                <div class="tool-badge" data-category="pdf">
-                    <i class="fas fa-file-pdf"></i>
-                    <span>PDF Tools</span>
-                </div>
                 <div class="tool-badge" data-category="image">
                     <i class="fas fa-image"></i>
                     <span>Image Tools</span>
+                </div>
+                <div class="tool-badge" data-category="pdf">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>PDF Tools</span>
                 </div>
                 <div class="tool-badge" data-category="video">
                     <i class="fas fa-video"></i>
                     <span>Video Tools</span>
                 </div>
-                <div class="tool-badge" data-category="sign">
-                    <i class="fas fa-file-signature"></i>
-                    <span>Sign Tools</span>
+                <div class="tool-badge" data-category="signature">
+                    <i class="fas fa-signature"></i>
+                    <span>Signature Tools</span>
                 </div>
             </div>
         </div>
@@ -647,188 +654,59 @@
     <!-- Tools Grid -->
     <section class="tools-container" id="tools-section">
         <div class="tools-grid" id="toolsGrid">
-            <!-- PDF Tools (20) -->
-            <div class="tool-card" data-category="pdf" data-tool-name="PDF to Word">
-                <div class="tool-icon"><i class="fas fa-file-word"></i></div>
-                <h3 class="tool-name">PDF to Word</h3>
-              <a href="pdf-to-word.html">PDF to Word</a
-                <p class="tool-desc">Convert PDF files to editable Word documents</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="Word to PDF">
-                <div class="tool-icon"><i class="fas fa-file-pdf"></i></div>
-                <h3 class="tool-name">Word to PDF</h3>
-                <p class="tool-desc">Convert Word documents to PDF format</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PDF to Excel">
-                <div class="tool-icon"><i class="fas fa-file-excel"></i></div>
-                <h3 class="tool-name">PDF to Excel</h3>
-                <p class="tool-desc">Convert PDF files to Excel spreadsheets</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="Excel to PDF">
-                <div class="tool-icon"><i class="fas fa-file-pdf"></i></div>
-                <h3 class="tool-name">Excel to PDF</h3>
-                <p class="tool-desc">Convert Excel spreadsheets to PDF format</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PDF to PPT">
-                <div class="tool-icon"><i class="fas fa-file-powerpoint"></i></div>
-                <h3 class="tool-name">PDF to PPT</h3>
-                <p class="tool-desc">Convert PDF files to PowerPoint presentations</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PPT to PDF">
-                <div class="tool-icon"><i class="fas fa-file-pdf"></i></div>
-                <h3 class="tool-name">PPT to PDF</h3>
-                <p class="tool-desc">Convert PowerPoint presentations to PDF format</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PDF Split">
-                <div class="tool-icon"><i class="fas fa-cut"></i></div>
-                <h3 class="tool-name">PDF Split</h3>
-                <p class="tool-desc">Split PDF into multiple files</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PDF Merge">
-                <div class="tool-icon"><i class="fas fa-object-group"></i></div>
-                <h3 class="tool-name">PDF Merge</h3>
-                <p class="tool-desc">Combine multiple PDF files into one</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PDF Compress">
-                <div class="tool-icon"><i class="fas fa-compress-arrows-alt"></i></div>
-                <h3 class="tool-name">PDF Compress</h3>
-                <p class="tool-desc">Reduce PDF file size without losing quality</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PDF Unlock">
-                <div class="tool-icon"><i class="fas fa-unlock"></i></div>
-                <h3 class="tool-name">PDF Unlock</h3>
-                <p class="tool-desc">Remove password protection from PDF files</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PDF Protect">
-                <div class="tool-icon"><i class="fas fa-lock"></i></div>
-                <h3 class="tool-name">PDF Protect</h3>
-                <p class="tool-desc">Add password protection to your PDF files</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PDF Remove Password">
-                <div class="tool-icon"><i class="fas fa-key"></i></div>
-                <h3 class="tool-name">PDF Remove Password</h3>
-                <p class="tool-desc">Remove password from protected PDF files</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PDF Rotate">
-                <div class="tool-icon"><i class="fas fa-redo"></i></div>
-                <h3 class="tool-name">PDF Rotate</h3>
-                <p class="tool-desc">Rotate pages in PDF documents</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PDF to JPG">
-                <div class="tool-icon"><i class="fas fa-file-image"></i></div>
-                <h3 class="tool-name">PDF to JPG</h3>
-                <p class="tool-desc">Convert PDF pages to JPG images</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="JPG to PDF">
-                <div class="tool-icon"><i class="fas fa-file-pdf"></i></div>
-                <h3 class="tool-name">JPG to PDF</h3>
-                <p class="tool-desc">Convert JPG images to PDF documents</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PDF to PNG">
-                <div class="tool-icon"><i class="fas fa-file-image"></i></div>
-                <h3 class="tool-name">PDF to PNG</h3>
-                <p class="tool-desc">Convert PDF pages to PNG images</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PNG to PDF">
-                <div class="tool-icon"><i class="fas fa-file-pdf"></i></div>
-                <h3 class="tool-name">PNG to PDF</h3>
-                <p class="tool-desc">Convert PNG images to PDF documents</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PDF to TXT">
-                <div class="tool-icon"><i class="fas fa-file-alt"></i></div>
-                <h3 class="tool-name">PDF to TXT</h3>
-                <p class="tool-desc">Extract text from PDF files</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PDF to HTML">
-                <div class="tool-icon"><i class="fas fa-code"></i></div>
-                <h3 class="tool-name">PDF to HTML</h3>
-                <p class="tool-desc">Convert PDF files to HTML web pages</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-            <div class="tool-card" data-category="pdf" data-tool-name="PDF Metadata Editor">
-                <div class="tool-icon"><i class="fas fa-info-circle"></i></div>
-                <h3 class="tool-name">PDF Metadata Editor</h3>
-                <p class="tool-desc">Edit metadata information in PDF files</p>
-                <span class="tool-category">PDF Tools</span>
-            </div>
-
-            <!-- Image Tools (20) -->
-            <div class="tool-card" data-category="image" data-tool-name="Image Resize">
+            <!-- Image Tools (10) -->
+            <div class="tool-card" data-category="image" data-tool-name="Image Resizer">
                 <div class="tool-icon"><i class="fas fa-expand-arrows-alt"></i></div>
-                <h3 class="tool-name">Image Resize</h3>
+                <h3 class="tool-name">Image Resizer</h3>
                 <p class="tool-desc">Resize your images to any dimension</p>
                 <span class="tool-category">Image Tools</span>
             </div>
-            <div class="tool-card" data-category="image" data-tool-name="Image Crop">
+            <div class="tool-card" data-category="image" data-tool-name="Image Compressor">
+                <div class="tool-icon"><i class="fas fa-compress-alt"></i></div>
+                <h3 class="tool-name">Image Compressor</h3>
+                <p class="tool-desc">Reduce image file size without losing quality</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
+            <div class="tool-card" data-category="image" data-tool-name="Format Converter">
+                <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
+                <h3 class="tool-name">Format Converter</h3>
+                <p class="tool-desc">Convert images between different formats</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
+            <div class="tool-card" data-category="image" data-tool-name="Crop Tool">
                 <div class="tool-icon"><i class="fas fa-crop-alt"></i></div>
-                <h3 class="tool-name">Image Crop</h3>
+                <h3 class="tool-name">Crop Tool</h3>
                 <p class="tool-desc">Crop images to focus on important areas</p>
                 <span class="tool-category">Image Tools</span>
             </div>
-            <div class="tool-card" data-category="image" data-tool-name="JPG to PNG">
-                <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
-                <h3 class="tool-name">JPG to PNG</h3>
-                <p class="tool-desc">Convert JPG images to PNG format</p>
-                <span class="tool-category">Image Tools</span>
-            </div>
-            <div class="tool-card" data-category="image" data-tool-name="PNG to JPG">
-                <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
-                <h3 class="tool-name">PNG to JPG</h3>
-                <p class="tool-desc">Convert PNG images to JPG format</p>
-                <span class="tool-category">Image Tools</span>
-            </div>
-            <div class="tool-card" data-category="image" data-tool-name="Image to WebP">
-                <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
-                <h3 class="tool-name">Image to WebP</h3>
-                <p class="tool-desc">Convert images to WebP format</p>
-                <span class="tool-category">Image Tools</span>
-            </div>
-            <div class="tool-card" data-category="image" data-tool-name="WebP to Image">
-                <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
-                <h3 class="tool-name">WebP to Image</h3>
-                <p class="tool-desc">Convert WebP images to other formats</p>
-                <span class="tool-category">Image Tools</span>
-            </div>
-            <div class="tool-card" data-category="image" data-tool-name="Remove Background">
+            <div class="tool-card" data-category="image" data-tool-name="Background Remover">
                 <div class="tool-icon"><i class="fas fa-layer-group"></i></div>
-                <h3 class="tool-name">Remove Background</h3>
+                <h3 class="tool-name">Background Remover</h3>
                 <p class="tool-desc">Remove background from images automatically</p>
                 <span class="tool-category">Image Tools</span>
             </div>
-            <div class="tool-card" data-category="image" data-tool-name="Blur Image">
-                <div class="tool-icon"><i class="fas fa-tint"></i></div>
-                <h3 class="tool-name">Blur Image</h3>
-                <p class="tool-desc">Apply blur effects to your images</p>
-                <span class="tool-category">Image Tools</span>
-            </div>
-            <div class="tool-card" data-category="image" data-tool-name="Sharpen Image">
+            <div class="tool-card" data-category="image" data-tool-name="Grayscale & Filters">
                 <div class="tool-icon"><i class="fas fa-magic"></i></div>
-                <h3 class="tool-name">Sharpen Image</h3>
-                <p class="tool-desc">Enhance image sharpness and clarity</p>
+                <h3 class="tool-name">Grayscale & Filters</h3>
+                <p class="tool-desc">Apply filters and convert images to grayscale</p>
                 <span class="tool-category">Image Tools</span>
             </div>
-            <div class="tool-card" data-category="image" data-tool-name="Add Watermark">
+            <div class="tool-card" data-category="image" data-tool-name="Watermark Adder">
                 <div class="tool-icon"><i class="fas fa-tint"></i></div>
-                <h3 class="tool-name">Add Watermark</h3>
+                <h3 class="tool-name">Watermark Adder</h3>
                 <p class="tool-desc">Add text or image watermarks to your photos</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
+            <div class="tool-card" data-category="image" data-tool-name="Rotator & Flipper">
+                <div class="tool-icon"><i class="fas fa-sync"></i></div>
+                <h3 class="tool-name">Rotator & Flipper</h3>
+                <p class="tool-desc">Rotate and flip images to correct orientation</p>
+                <span class="tool-category">Image Tools</span>
+            </div>
+            <div class="tool-card" data-category="image" data-tool-name="Collage Maker">
+                <div class="tool-icon"><i class="fas fa-th-large"></i></div>
+                <h3 class="tool-name">Collage Maker</h3>
+                <p class="tool-desc">Create beautiful photo collages</p>
                 <span class="tool-category">Image Tools</span>
             </div>
             <div class="tool-card" data-category="image" data-tool-name="Meme Generator">
@@ -837,84 +715,80 @@
                 <p class="tool-desc">Create memes with your images</p>
                 <span class="tool-category">Image Tools</span>
             </div>
-            <div class="tool-card" data-category="image" data-tool-name="Image Color Picker">
-                <div class="tool-icon"><i class="fas fa-eye-dropper"></i></div>
-                <h3 class="tool-name">Image Color Picker</h3>
-                <p class="tool-desc">Extract colors from your images</p>
-                <span class="tool-category">Image Tools</span>
+
+            <!-- PDF Tools (10) -->
+            <div class="tool-card" data-category="pdf" data-tool-name="Merge PDFs">
+                <div class="tool-icon"><i class="fas fa-object-group"></i></div>
+                <h3 class="tool-name">Merge PDFs</h3>
+                <p class="tool-desc">Combine multiple PDF files into one</p>
+                <span class="tool-category">PDF Tools</span>
             </div>
-            <div class="tool-card" data-category="image" data-tool-name="Convert to Black & White">
-                <div class="tool-icon"><i class="fas fa-moon"></i></div>
-                <h3 class="tool-name">Convert to Black & White</h3>
-                <p class="tool-desc">Transform color images to black and white</p>
-                <span class="tool-category">Image Tools</span>
+            <div class="tool-card" data-category="pdf" data-tool-name="Split PDF">
+                <div class="tool-icon"><i class="fas fa-cut"></i></div>
+                <h3 class="tool-name">Split PDF</h3>
+                <p class="tool-desc">Split PDF into multiple files</p>
+                <span class="tool-category">PDF Tools</span>
             </div>
-            <div class="tool-card" data-category="image" data-tool-name="Cartoonize Image">
-                <div class="tool-icon"><i class="fas fa-paint-brush"></i></div>
-                <h3 class="tool-name">Cartoonize Image</h3>
-                <p class="tool-desc">Turn photos into cartoon images</p>
-                <span class="tool-category">Image Tools</span>
+            <div class="tool-card" data-category="pdf" data-tool-name="Compress PDF">
+                <div class="tool-icon"><i class="fas fa-compress-arrows-alt"></i></div>
+                <h3 class="tool-name">Compress PDF</h3>
+                <p class="tool-desc">Reduce PDF file size without losing quality</p>
+                <span class="tool-category">PDF Tools</span>
             </div>
-            <div class="tool-card" data-category="image" data-tool-name="Rotate Image">
-                <div class="tool-icon"><i class="fas fa-sync"></i></div>
-                <h3 class="tool-name">Rotate Image</h3>
-                <p class="tool-desc">Rotate images to correct orientation</p>
-                <span class="tool-category">Image Tools</span>
+            <div class="tool-card" data-category="pdf" data-tool-name="Rotate PDF">
+                <div class="tool-icon"><i class="fas fa-redo"></i></div>
+                <h3 class="tool-name">Rotate PDF</h3>
+                <p class="tool-desc">Rotate pages in PDF documents</p>
+                <span class="tool-category">PDF Tools</span>
             </div>
-            <div class="tool-card" data-category="image" data-tool-name="Flip Image">
-                <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
-                <h3 class="tool-name">Flip Image</h3>
-                <p class="tool-desc">Flip images horizontally or vertically</p>
-                <span class="tool-category">Image Tools</span>
+            <div class="tool-card" data-category="pdf" data-tool-name="PDF to Image">
+                <div class="tool-icon"><i class="fas fa-file-image"></i></div>
+                <h3 class="tool-name">PDF to Image</h3>
+                <p class="tool-desc">Convert PDF pages to images</p>
+                <span class="tool-category">PDF Tools</span>
             </div>
-            <div class="tool-card" data-category="image" data-tool-name="Compress Image">
-                <div class="tool-icon"><i class="fas fa-compress-alt"></i></div>
-                <h3 class="tool-name">Compress Image</h3>
-                <p class="tool-desc">Reduce image file size without losing quality</p>
-                <span class="tool-category">Image Tools</span>
+            <div class="tool-card" data-category="pdf" data-tool-name="Image to PDF">
+                <div class="tool-icon"><i class="fas fa-file-pdf"></i></div>
+                <h3 class="tool-name">Image to PDF</h3>
+                <p class="tool-desc">Convert images to PDF documents</p>
+                <span class="tool-category">PDF Tools</span>
             </div>
-            <div class="tool-card" data-category="image" data-tool-name="Image to Base64">
-                <div class="tool-icon"><i class="fas fa-code"></i></div>
-                <h3 class="tool-name">Image to Base64</h3>
-                <p class="tool-desc">Convert images to Base64 encoding</p>
-                <span class="tool-category">Image Tools</span>
+            <div class="tool-card" data-category="pdf" data-tool-name="Reorder Pages">
+                <div class="tool-icon"><i class="fas fa-sort"></i></div>
+                <h3 class="tool-name">Reorder Pages</h3>
+                <p class="tool-desc">Rearrange pages in PDF documents</p>
+                <span class="tool-category">PDF Tools</span>
             </div>
-            <div class="tool-card" data-category="image" data-tool-name="Base64 to Image">
-                <div class="tool-icon"><i class="fas fa-image"></i></div>
-                <h3 class="tool-name">Base64 to Image</h3>
-                <p class="tool-desc">Convert Base64 strings to images</p>
-                <span class="tool-category">Image Tools</span>
+            <div class="tool-card" data-category="pdf" data-tool-name="PDF Watermark">
+                <div class="tool-icon"><i class="fas fa-tint"></i></div>
+                <h3 class="tool-name">PDF Watermark</h3>
+                <p class="tool-desc">Add watermarks to PDF documents</p>
+                <span class="tool-category">PDF Tools</span>
             </div>
-            <div class="tool-card" data-category="image" data-tool-name="Image Metadata Remover">
-                <div class="tool-icon"><i class="fas fa-trash-alt"></i></div>
-                <h3 class="tool-name">Image Metadata Remover</h3>
-                <p class="tool-desc">Remove metadata from image files</p>
-                <span class="tool-category">Image Tools</span>
+            <div class="tool-card" data-category="pdf" data-tool-name="Extract Text">
+                <div class="tool-icon"><i class="fas fa-file-alt"></i></div>
+                <h3 class="tool-name">Extract Text</h3>
+                <p class="tool-desc">Extract text from PDF files</p>
+                <span class="tool-category">PDF Tools</span>
+            </div>
+            <div class="tool-card" data-category="pdf" data-tool-name="Encrypt / Decrypt">
+                <div class="tool-icon"><i class="fas fa-lock"></i></div>
+                <h3 class="tool-name">Encrypt / Decrypt</h3>
+                <p class="tool-desc">Add or remove password protection from PDFs</p>
+                <span class="tool-category">PDF Tools</span>
             </div>
 
-            <!-- Video Tools (20) -->
-            <div class="tool-card" data-category="video" data-tool-name="Video to MP3">
-                <div class="tool-icon"><i class="fas fa-music"></i></div>
-                <h3 class="tool-name">Video to MP3</h3>
-                <p class="tool-desc">Extract audio from video files</p>
+            <!-- Video Tools (10) -->
+            <div class="tool-card" data-category="video" data-tool-name="Video to GIF">
+                <div class="tool-icon"><i class="fas fa-photo-video"></i></div>
+                <h3 class="tool-name">Video to GIF</h3>
+                <p class="tool-desc">Convert video clips to animated GIFs</p>
                 <span class="tool-category">Video Tools</span>
             </div>
-            <div class="tool-card" data-category="video" data-tool-name="MP3 to Video">
-                <div class="tool-icon"><i class="fas fa-video"></i></div>
-                <h3 class="tool-name">MP3 to Video</h3>
-                <p class="tool-desc">Convert audio files to video with static image</p>
-                <span class="tool-category">Video Tools</span>
-            </div>
-            <div class="tool-card" data-category="video" data-tool-name="Video Trim">
+            <div class="tool-card" data-category="video" data-tool-name="Trim / Cut Video">
                 <div class="tool-icon"><i class="fas fa-cut"></i></div>
-                <h3 class="tool-name">Video Trim</h3>
+                <h3 class="tool-name">Trim / Cut Video</h3>
                 <p class="tool-desc">Trim video clips to desired length</p>
-                <span class="tool-category">Video Tools</span>
-            </div>
-            <div class="tool-card" data-category="video" data-tool-name="Video Crop">
-                <div class="tool-icon"><i class="fas fa-crop-alt"></i></div>
-                <h3 class="tool-name">Video Crop</h3>
-                <p class="tool-desc">Crop video frames to remove unwanted areas</p>
                 <span class="tool-category">Video Tools</span>
             </div>
             <div class="tool-card" data-category="video" data-tool-name="Merge Videos">
@@ -923,157 +797,109 @@
                 <p class="tool-desc">Combine multiple video clips into one</p>
                 <span class="tool-category">Video Tools</span>
             </div>
+            <div class="tool-card" data-category="video" data-tool-name="Mute / Remove Audio">
+                <div class="tool-icon"><i class="fas fa-volume-mute"></i></div>
+                <h3 class="tool-name">Mute / Remove Audio</h3>
+                <p class="tool-desc">Remove audio from video files</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
+            <div class="tool-card" data-category="video" data-tool-name="Extract Audio (MP3)">
+                <div class="tool-icon"><i class="fas fa-music"></i></div>
+                <h3 class="tool-name">Extract Audio (MP3)</h3>
+                <p class="tool-desc">Extract audio from video files</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
+            <div class="tool-card" data-category="video" data-tool-name="Speed Changer">
+                <div class="tool-icon"><i class="fas fa-tachometer-alt"></i></div>
+                <h3 class="tool-name">Speed Changer</h3>
+                <p class="tool-desc">Change playback speed of videos</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
+            <div class="tool-card" data-category="video" data-tool-name="Rotate & Flip Video">
+                <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
+                <h3 class="tool-name">Rotate & Flip Video</h3>
+                <p class="tool-desc">Rotate and flip video orientation</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
+            <div class="tool-card" data-category="video" data-tool-name="Frame Extractor">
+                <div class="tool-icon"><i class="fas fa-image"></i></div>
+                <h3 class="tool-name">Frame Extractor</h3>
+                <p class="tool-desc">Extract frames from videos as images</p>
+                <span class="tool-category">Video Tools</span>
+            </div>
             <div class="tool-card" data-category="video" data-tool-name="Video Compressor">
                 <div class="tool-icon"><i class="fas fa-compress-alt"></i></div>
                 <h3 class="tool-name">Video Compressor</h3>
                 <p class="tool-desc">Reduce video file size while maintaining quality</p>
                 <span class="tool-category">Video Tools</span>
             </div>
-            <div class="tool-card" data-category="video" data-tool-name="Video to GIF">
-                <div class="tool-icon"><i class="fas fa-photo-video"></i></div>
-                <h3 class="tool-name">Video to GIF</h3>
-                <p class="tool-desc">Convert video clips to animated GIFs</p>
-                <span class="tool-category">Video Tools</span>
-            </div>
-            <div class="tool-card" data-category="video" data-tool-name="GIF to Video">
-                <div class="tool-icon"><i class="fas fa-video"></i></div>
-                <h3 class="tool-name">GIF to Video</h3>
-                <p class="tool-desc">Convert GIF animations to video format</p>
-                <span class="tool-category">Video Tools</span>
-            </div>
-            <div class="tool-card" data-category="video" data-tool-name="Add Subtitles">
-                <div class="tool-icon"><i class="fas fa-closed-captioning"></i></div>
-                <h3 class="tool-name">Add Subtitles</h3>
-                <p class="tool-desc">Add subtitle tracks to your videos</p>
-                <span class="tool-category">Video Tools</span>
-            </div>
-            <div class="tool-card" data-category="video" data-tool-name="Remove Subtitles">
-                <div class="tool-icon"><i class="fas fa-times-circle"></i></div>
-                <h3 class="tool-name">Remove Subtitles</h3>
-                <p class="tool-desc">Remove subtitles from video files</p>
-                <span class="tool-category">Video Tools</span>
-            </div>
-            <div class="tool-card" data-category="video" data-tool-name="Add Video Watermark">
+            <div class="tool-card" data-category="video" data-tool-name="Add Watermark to Video">
                 <div class="tool-icon"><i class="fas fa-tint"></i></div>
-                <h3 class="tool-name">Add Video Watermark</h3>
+                <h3 class="tool-name">Add Watermark to Video</h3>
                 <p class="tool-desc">Add watermark to your videos</p>
                 <span class="tool-category">Video Tools</span>
             </div>
-            <div class="tool-card" data-category="video" data-tool-name="Remove Video Watermark">
-                <div class="tool-icon"><i class="fas fa-eraser"></i></div>
-                <h3 class="tool-name">Remove Video Watermark</h3>
-                <p class="tool-desc">Remove watermarks from videos</p>
-                <span class="tool-category">Video Tools</span>
-            </div>
-            <div class="tool-card" data-category="video" data-tool-name="Rotate Video">
-                <div class="tool-icon"><i class="fas fa-redo"></i></div>
-                <h3 class="tool-name">Rotate Video</h3>
-                <p class="tool-desc">Rotate video orientation</p>
-                <span class="tool-category">Video Tools</span>
-            </div>
-            <div class="tool-card" data-category="video" data-tool-name="Flip Video">
-                <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
-                <h3 class="tool-name">Flip Video</h3>
-                <p class="tool-desc">Flip video horizontally or vertically</p>
-                <span class="tool-category">Video Tools</span>
-            </div>
-            <div class="tool-card" data-category="video" data-tool-name="Video Speed Changer">
-                <div class="tool-icon"><i class="fas fa-tachometer-alt"></i></div>
-                <h3 class="tool-name">Video Speed Changer</h3>
-                <p class="tool-desc">Change playback speed of videos</p>
-                <span class="tool-category">Video Tools</span>
-            </div>
-            <div class="tool-card" data-category="video" data-tool-name="Video Frame Extractor">
-                <div class="tool-icon"><i class="fas fa-image"></i></div>
-                <h3 class="tool-name">Video Frame Extractor</h3>
-                <p class="tool-desc">Extract frames from videos as images</p>
-                <span class="tool-category">Video Tools</span>
-            </div>
-            <div class="tool-card" data-category="video" data-tool-name="Video Converter">
-                <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
-                <h3 class="tool-name">Video Converter</h3>
-                <p class="tool-desc">Convert videos between different formats</p>
-                <span class="tool-category">Video Tools</span>
-            </div>
-            <div class="tool-card" data-category="video" data-tool-name="YouTube Thumbnail Downloader">
-                <div class="tool-icon"><i class="fab fa-youtube"></i></div>
-                <h3 class="tool-name">YouTube Thumbnail Downloader</h3>
-                <p class="tool-desc">Download thumbnails from YouTube videos</p>
-                <span class="tool-category">Video Tools</span>
-            </div>
-            <div class="tool-card" data-category="video" data-tool-name="Screen Recorder">
-                <div class="tool-icon"><i class="fas fa-video"></i></div>
-                <h3 class="tool-name">Screen Recorder</h3>
-                <p class="tool-desc">Record your screen with audio</p>
-                <span class="tool-category">Video Tools</span>
-            </div>
-            <div class="tool-card" data-category="video" data-tool-name="Video to Audio">
-                <div class="tool-icon"><i class="fas fa-headphones"></i></div>
-                <h3 class="tool-name">Video to Audio</h3>
-                <p class="tool-desc">Extract audio from video files in various formats</p>
-                <span class="tool-category">Video Tools</span>
-            </div>
 
-            <!-- Sign Tools (10) -->
-            <div class="tool-card" data-category="sign" data-tool-name="Signature Maker">
+            <!-- Signature Tools (10) -->
+            <div class="tool-card" data-category="signature" data-tool-name="Signature Pad">
                 <div class="tool-icon"><i class="fas fa-signature"></i></div>
-                <h3 class="tool-name">Signature Maker</h3>
+                <h3 class="tool-name">Signature Pad</h3>
                 <p class="tool-desc">Create digital signatures easily</p>
-                <span class="tool-category">Sign Tools</span>
+                <span class="tool-category">Signature Tools</span>
             </div>
-            <div class="tool-card" data-category="sign" data-tool-name="Sign to PDF">
+            <div class="tool-card" data-category="signature" data-tool-name="Signature to PDF">
                 <div class="tool-icon"><i class="fas fa-file-signature"></i></div>
-                <h3 class="tool-name">Sign to PDF</h3>
+                <h3 class="tool-name">Signature to PDF</h3>
                 <p class="tool-desc">Add signatures to PDF documents</p>
-                <span class="tool-category">Sign Tools</span>
+                <span class="tool-category">Signature Tools</span>
             </div>
-            <div class="tool-card" data-category="sign" data-tool-name="Add Signature on Image">
-                <div class="tool-icon"><i class="fas fa-stamp"></i></div>
-                <h3 class="tool-name">Add Signature on Image</h3>
-                <p class="tool-desc">Place your signature on images</p>
-                <span class="tool-category">Sign Tools</span>
-            </div>
-            <div class="tool-card" data-category="sign" data-tool-name="Add Signature on Document">
+            <div class="tool-card" data-category="signature" data-tool-name="Add Signature to Document">
                 <div class="tool-icon"><i class="fas fa-file-contract"></i></div>
-                <h3 class="tool-name">Add Signature on Document</h3>
+                <h3 class="tool-name">Add Signature to Document</h3>
                 <p class="tool-desc">Add signatures to various document formats</p>
-                <span class="tool-category">Sign Tools</span>
+                <span class="tool-category">Signature Tools</span>
             </div>
-            <div class="tool-card" data-category="sign" data-tool-name="Signature Scanner">
-                <div class="tool-icon"><i class="fas fa-search"></i></div>
-                <h3 class="tool-name">Signature Scanner</h3>
-                <p class="tool-desc">Scan and digitize handwritten signatures</p>
-                <span class="tool-category">Sign Tools</span>
+            <div class="tool-card" data-category="signature" data-tool-name="Signature Color Customizer">
+                <div class="tool-icon"><i class="fas fa-palette"></i></div>
+                <h3 class="tool-name">Signature Color Customizer</h3>
+                <p class="tool-desc">Customize the color of your signature</p>
+                <span class="tool-category">Signature Tools</span>
             </div>
-            <div class="tool-card" data-category="sign" data-tool-name="Digital Signature Validator">
-                <div class="tool-icon"><i class="fas fa-check-circle"></i></div>
-                <h3 class="tool-name">Digital Signature Validator</h3>
-                <p class="tool-desc">Validate digital signatures on documents</p>
-                <span class="tool-category">Sign Tools</span>
-            </div>
-            <div class="tool-card" data-category="sign" data-tool-name="Signature to Transparent PNG">
+            <div class="tool-card" data-category="signature" data-tool-name="Transparent Signature">
                 <div class="tool-icon"><i class="fas fa-file-image"></i></div>
-                <h3 class="tool-name">Signature to Transparent PNG</h3>
+                <h3 class="tool-name">Transparent Signature</h3>
                 <p class="tool-desc">Create transparent PNG signatures</p>
-                <span class="tool-category">Sign Tools</span>
+                <span class="tool-category">Signature Tools</span>
             </div>
-            <div class="tool-card" data-category="sign" data-tool-name="Handwriting to Signature Style">
+            <div class="tool-card" data-category="signature" data-tool-name="Draw + Type Signature">
                 <div class="tool-icon"><i class="fas fa-pen-fancy"></i></div>
-                <h3 class="tool-name">Handwriting to Signature Style</h3>
-                <p class="tool-desc">Convert handwriting to signature style</p>
-                <span class="tool-category">Sign Tools</span>
+                <h3 class="tool-name">Draw + Type Signature</h3>
+                <p class="tool-desc">Draw or type your signature</p>
+                <span class="tool-category">Signature Tools</span>
             </div>
-            <div class="tool-card" data-category="sign" data-tool-name="Draw Signature Online">
-                <div class="tool-icon"><i class="fas fa-pen"></i></div>
-                <h3 class="tool-name">Draw Signature Online</h3>
-                <p class="tool-desc">Draw your signature with mouse or touch</p>
-                <span class="tool-category">Sign Tools</span>
+            <div class="tool-card" data-category="signature" data-tool-name="Multi-Signature Pad">
+                <div class="tool-icon"><i class="fas fa-users"></i></div>
+                <h3 class="tool-name">Multi-Signature Pad</h3>
+                <p class="tool-desc">Collect multiple signatures on one document</p>
+                <span class="tool-category">Signature Tools</span>
             </div>
-            <div class="tool-card" data-category="sign" data-tool-name="E-sign PDF">
-                <div class="tool-icon"><i class="fas fa-file-contract"></i></div>
-                <h3 class="tool-name">E-sign PDF</h3>
-                <p class="tool-desc">Electronically sign PDF documents</p>
-                <span class="tool-category">Sign Tools</span>
+            <div class="tool-card" data-category="signature" data-tool-name="Signature Resizer & Cropper">
+                <div class="tool-icon"><i class="fas fa-crop-alt"></i></div>
+                <h3 class="tool-name">Signature Resizer & Cropper</h3>
+                <p class="tool-desc">Resize and crop signatures</p>
+                <span class="tool-category">Signature Tools</span>
+            </div>
+            <div class="tool-card" data-category="signature" data-tool-name="E-Stamp + Signature">
+                <div class="tool-icon"><i class="fas fa-stamp"></i></div>
+                <h3 class="tool-name">E-Stamp + Signature</h3>
+                <p class="tool-desc">Add electronic stamps with signatures</p>
+                <span class="tool-category">Signature Tools</span>
+            </div>
+            <div class="tool-card" data-category="signature" data-tool-name="Signature Animation to GIF">
+                <div class="tool-icon"><i class="fas fa-photo-video"></i></div>
+                <h3 class="tool-name">Signature Animation to GIF</h3>
+                <p class="tool-desc">Create animated signature GIFs</p>
+                <span class="tool-category">Signature Tools</span>
             </div>
         </div>
     </section>
@@ -1098,10 +924,10 @@
             <div class="footer-column">
                 <h3>Tool Categories</h3>
                 <ul class="footer-links">
-                    <li><a href="#" data-category="pdf">PDF Tools</a></li>
                     <li><a href="#" data-category="image">Image Tools</a></li>
+                    <li><a href="#" data-category="pdf">PDF Tools</a></li>
                     <li><a href="#" data-category="video">Video Tools</a></li>
-                    <li><a href="#" data-category="sign">Sign Tools</a></li>
+                    <li><a href="#" data-category="signature">Signature Tools</a></li>
                 </ul>
             </div>
         </div>
@@ -1139,7 +965,13 @@
             const heroSearch = document.getElementById('heroSearch');
             const toolBadges = document.querySelectorAll('.tool-badge');
             const toolCards = document.querySelectorAll('.tool-card');
+            const toolsGrid = document.getElementById('toolsGrid');
             const footerLinks = document.querySelectorAll('.footer-links a[data-category]');
+            
+            // Create no results message element
+            const noResults = document.createElement('div');
+            noResults.className = 'no-results';
+            noResults.innerHTML = '<i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem;"></i><h3>No tools found</h3><p>Try a different search term or category</p>';
             
             // Hero search functionality
             heroSearch.addEventListener('keyup', function() {
@@ -1175,6 +1007,9 @@
                     // Add active class to corresponding badge
                     document.querySelector(`.tool-badge[data-category="${category}"]`).classList.add('active');
                     
+                    // Clear search
+                    heroSearch.value = '';
+                    
                     // Filter tools
                     filterTools('', category);
                     
@@ -1189,26 +1024,41 @@
             toolCards.forEach(card => {
                 card.addEventListener('click', function() {
                     const toolName = this.dataset.toolName;
-                    const url = toolName.toLowerCase().replace(/\s+/g, '-') + '.html';
+                    const url = toolName.toLowerCase().replace(/\s+/g, '-').replace(/[\(\)]/g, '') + '.html';
                     window.location.href = url;
                 });
             });
             
             function filterTools(searchTerm, category) {
+                let visibleCount = 0;
+                
                 toolCards.forEach(card => {
                     const toolName = card.dataset.toolName.toLowerCase();
                     const toolDesc = card.querySelector('.tool-desc').textContent.toLowerCase();
                     const toolCategory = card.dataset.category;
                     
-                    const matchesSearch = toolName.includes(searchTerm) || toolDesc.includes(searchTerm);
+                    const matchesSearch = searchTerm === '' || toolName.includes(searchTerm) || toolDesc.includes(searchTerm);
                     const matchesCategory = category === 'all' || toolCategory === category;
                     
                     if (matchesSearch && matchesCategory) {
                         card.style.display = 'flex';
+                        visibleCount++;
                     } else {
                         card.style.display = 'none';
                     }
                 });
+                
+                // Show or hide no results message
+                if (visibleCount === 0) {
+                    if (!document.querySelector('.no-results')) {
+                        toolsGrid.appendChild(noResults);
+                    }
+                } else {
+                    const noResultsElement = document.querySelector('.no-results');
+                    if (noResultsElement) {
+                        noResultsElement.remove();
+                    }
+                }
             }
             
             // Animate tool cards on scroll
